@@ -53,12 +53,14 @@
 
 ### 🔑 Demo Login
 1. Go to http://localhost:3000
-2. Click the **"Use Demo"** button
+2. Click the **"Use Demo"** button (logs in automatically)
 3. Start creating posts!
 
 **Demo Credentials:**
 - Username: `demo`
 - Password: `demo123`
+
+*Note: The demo user is now active and working correctly!*
 
 ---
 
