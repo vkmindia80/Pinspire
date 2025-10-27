@@ -59,7 +59,9 @@ class CaptionRequest(BaseModel):
 
 class ImageGenerationRequest(BaseModel):
     prompt: str
-    style: Optional[str] = "professional"
+    size: Optional[str] = "1024x1024"  # Options: 1024x1024, 1792x1024, 1024x1792
+    quality: Optional[str] = "standard"  # Options: standard, hd
+    style: Optional[str] = "vivid"  # Options: natural, vivid
 
 class PostCreate(BaseModel):
     caption: str
