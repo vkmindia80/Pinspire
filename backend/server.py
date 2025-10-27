@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 import os
 import uuid
 import asyncio
+from functools import lru_cache
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
 from pinterest_service import pinterest_service
