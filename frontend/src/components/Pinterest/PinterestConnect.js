@@ -21,7 +21,7 @@ function PinterestConnect({ onConnectionChange }) {
 
   const fetchModeInfo = async () => {
     try {
-      const response = await api.get('/api/pinterest/mode');
+      const response = await api.get('/pinterest/mode');
       setModeInfo(response.data);
     } catch (err) {
       console.error('Error fetching Pinterest mode:', err);
