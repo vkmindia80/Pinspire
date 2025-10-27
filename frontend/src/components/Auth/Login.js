@@ -49,7 +49,7 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await api.post('/api/auth/login', demoCredentials);
+      const response = await api.post('/auth/login', demoCredentials);
       const { access_token, user } = response.data;
       
       onLogin(access_token, user);
