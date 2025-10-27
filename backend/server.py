@@ -346,16 +346,19 @@ async def connect_pinterest(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=f"Error initiating Pinterest connection: {str(e)}")
 
 @app.post("/api/pinterest/callback")
-async def pinterest_callback(code: str, state: str, current_user: dict = Depends(get_current_user)):
+async def pinterest_callback(request: PinterestCallbackRequest, current_user: dict = Depends(get_current_user)):
     """Handle Pinterest OAuth callback"""
     try:
         # Verify state
         user = await db.users.find_one({"_id": current_user["_id"]})
-        if user.get("pinterest_oauth_state") != state:
-            raise HTTPException(status_code=400, detail="Invalid state parameter")
+        
+        # For mock mode, skip state verification if not set
+        if not pinterest_service.is_mock:
+            if user.get("pinterest_oauth_state") != request.state:
+                raise HTTPException(status_code=400, detail="Invalid state parameter")
         
         # Exchange code for tokens
-        token_data = await pinterest_service.exchange_code_for_token(code)
+        token_data = await pinterest_service.exchange_code_for_token(request.code)
         
         # Get user info from Pinterest
         try:
