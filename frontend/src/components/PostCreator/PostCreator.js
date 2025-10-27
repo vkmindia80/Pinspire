@@ -143,7 +143,7 @@ function PostCreator() {
         await api.put(`/api/posts/${editId}`, formData);
         setSuccess('Post updated successfully!');
       } else {
-        await api.post('/posts', {
+        await api.post('/api/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
