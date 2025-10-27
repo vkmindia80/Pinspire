@@ -350,21 +350,66 @@ async def generate_caption(request: CaptionRequest, current_user: dict = Depends
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
             session_id=f"caption-{uuid.uuid4()}",
-            system_message="You are a creative Pinterest caption writer. Create engaging, scroll-stopping captions that drive engagement."
+            system_message="You are a creative Pinterest content strategist. Generate comprehensive, structured Pinterest content that drives engagement."
         ).with_model("openai", "gpt-4o")
         
-        # Build prompt
-        prompt = f"Create a compelling Pinterest caption about: {request.topic}\n"
-        prompt += f"Tone: {request.tone}\n"
-        if request.keywords:
-            prompt += f"Include these keywords naturally: {', '.join(request.keywords)}\n"
-        prompt += "\nThe caption should be engaging, include relevant hashtags, and be optimized for Pinterest. Keep it under 500 characters."
+        # Build comprehensive prompt for all fields
+        prompt = f"""Create comprehensive Pinterest content for the following topic: {request.topic}
+
+Tone: {request.tone}
+{f"Keywords to include: {', '.join(request.keywords)}" if request.keywords else ""}
+
+Generate the following in a structured JSON format:
+
+1. **title**: A catchy, attention-grabbing title (max 50 characters)
+2. **caption**: A short, engaging caption/hook (max 150 characters) 
+3. **description**: A detailed, comprehensive description with value and call-to-action (200-500 characters)
+4. **suggested_boards**: List of 3-5 generic Pinterest board names where this content would fit (e.g., "Recipe Ideas", "Home Decor Inspiration")
+5. **tagged_topics**: List of 5-10 relevant topic tags/keywords (single words or short phrases, no # symbols)
+6. **hashtags**: List of 8-12 relevant hashtags (with # symbols)
+
+Return ONLY a valid JSON object with these exact keys. Example format:
+{{
+  "title": "Quick 5-Minute Breakfast Ideas",
+  "caption": "Mornings just got easier! ☀️ Try these game-changing breakfast hacks",
+  "description": "Discover 5 delicious breakfast recipes that take only 5 minutes to prepare. Perfect for busy mornings when you need nutrition without the time commitment. From overnight oats to quick smoothie bowls, these recipes will transform your mornings. Save this pin for easy breakfast inspiration! 🍳✨",
+  "suggested_boards": ["Quick Recipes", "Breakfast Ideas", "Healthy Eating", "Meal Prep Inspiration"],
+  "tagged_topics": ["breakfast", "quick recipes", "healthy eating", "meal prep", "morning routine", "time saving", "easy cooking", "nutrition"],
+  "hashtags": ["#BreakfastIdeas", "#QuickRecipes", "#HealthyEating", "#MealPrep", "#MorningRoutine", "#BusyMom", "#HealthyLifestyle", "#FoodInspiration", "#RecipeOfTheDay", "#EasyRecipes"]
+}}
+
+Now generate for topic: {request.topic}"""
         
         user_message = UserMessage(text=prompt)
         response = await chat.send_message(user_message)
         
+        # Parse JSON response
+        import json
+        import re
+        
+        # Try to extract JSON from response
+        json_match = re.search(r'\{.*\}', response, re.DOTALL)
+        if json_match:
+            json_str = json_match.group(0)
+            content_data = json.loads(json_str)
+        else:
+            # Fallback if JSON parsing fails
+            content_data = {
+                "title": request.topic[:50],
+                "caption": response[:150],
+                "description": response[:500],
+                "suggested_boards": ["General Ideas", "Inspiration", "Creative Content"],
+                "tagged_topics": request.keywords if request.keywords else [request.topic],
+                "hashtags": [f"#{keyword}" for keyword in request.keywords[:5]] if request.keywords else []
+            }
+        
         return {
-            "caption": response,
+            "title": content_data.get("title", ""),
+            "caption": content_data.get("caption", ""),
+            "description": content_data.get("description", ""),
+            "suggested_boards": content_data.get("suggested_boards", []),
+            "tagged_topics": content_data.get("tagged_topics", []),
+            "hashtags": content_data.get("hashtags", []),
             "success": True
         }
     except Exception as e:
