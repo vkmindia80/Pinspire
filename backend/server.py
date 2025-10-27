@@ -261,6 +261,77 @@ async def get_me(current_user: dict = Depends(get_current_user)):
         "pinterest_connected": current_user.get("pinterest_connected", False)
     }
 
+@app.put("/api/auth/update-profile")
+async def update_profile(request: UpdateProfileRequest, current_user: dict = Depends(get_current_user)):
+    """Update user profile (username and email)"""
+    try:
+        # Check if username or email already exists for another user
+        existing_user = await db.users.find_one({
+            "$and": [
+                {"_id": {"$ne": current_user["_id"]}},
+                {"$or": [
+                    {"username": request.username},
+                    {"email": request.email}
+                ]}
+            ]
+        })
+        
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username or email already in use by another account")
+        
+        # Update user profile
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {
+                "username": request.username,
+                "email": request.email,
+                "updated_at": datetime.utcnow().isoformat()
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": "Profile updated successfully",
+            "user": {
+                "id": current_user["_id"],
+                "username": request.username,
+                "email": request.email
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating profile: {str(e)}")
+
+@app.put("/api/auth/update-password")
+async def update_password(request: UpdatePasswordRequest, current_user: dict = Depends(get_current_user)):
+    """Update user password"""
+    try:
+        # Verify current password
+        if not verify_password(request.current_password, current_user["password_hash"]):
+            raise HTTPException(status_code=400, detail="Current password is incorrect")
+        
+        # Hash new password
+        new_password_hash = hash_password(request.new_password)
+        
+        # Update password
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {
+                "password_hash": new_password_hash,
+                "updated_at": datetime.utcnow().isoformat()
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": "Password updated successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating password: {str(e)}")
+
 # AI Generation Routes
 @app.post("/api/ai/generate-caption")
 async def generate_caption(request: CaptionRequest, current_user: dict = Depends(get_current_user)):
