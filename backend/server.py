@@ -587,14 +587,35 @@ async def connect_pinterest(current_user: dict = Depends(get_current_user)):
             {"$set": {"pinterest_oauth_state": state}}
         )
         
-        # Get authorization URL
-        auth_url = pinterest_service.get_authorization_url(state)
+        # Check if user has custom credentials
+        user_credentials = current_user.get("pinterest_credentials", {})
+        has_user_credentials = bool(user_credentials.get("app_id") and user_credentials.get("app_secret"))
         
-        return {
-            "auth_url": auth_url,
-            "state": state,
-            "is_mock": pinterest_service.is_mock
-        }
+        if has_user_credentials:
+            # Use user's credentials for OAuth
+            from pinterest_service import PinterestService
+            user_service = PinterestService()
+            user_service.app_id = user_credentials["app_id"]
+            user_service.app_secret = user_credentials["app_secret"]
+            user_service.redirect_uri = user_credentials.get("redirect_uri", pinterest_service.redirect_uri)
+            user_service.is_mock = False
+            
+            auth_url = user_service.get_authorization_url(state)
+            
+            return {
+                "auth_url": auth_url,
+                "state": state,
+                "is_mock": False
+            }
+        else:
+            # Use default service (mock mode)
+            auth_url = pinterest_service.get_authorization_url(state)
+            
+            return {
+                "auth_url": auth_url,
+                "state": state,
+                "is_mock": pinterest_service.is_mock
+            }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error initiating Pinterest connection: {str(e)}")
 
