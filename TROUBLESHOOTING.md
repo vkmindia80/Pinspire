@@ -325,8 +325,8 @@ bash /app/check_status.sh
 
 ## Health Check URLs
 
-- **Frontend:** https://pinpost-scheduler.preview.emergentagent.com/
-- **Backend:** https://pinpost-scheduler.preview.emergentagent.com/api/ (should return 404, means it's running)
+- **Frontend:** https://login-retry.preview.emergentagent.com/
+- **Backend:** https://login-retry.preview.emergentagent.com/api/ (should return 404, means it's running)
 - **API Docs:** http://localhost:8001/docs (local only)
 
 ---
