@@ -29,12 +29,25 @@ function PostCreator() {
   const [generatingImage, setGeneratingImage] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [selectedBoards, setSelectedBoards] = useState([]);
+  const [showBoardSelector, setShowBoardSelector] = useState(false);
+  const [pinterestConnected, setPinterestConnected] = useState(false);
+  const [postingToPinterest, setPostingToPinterest] = useState(false);
 
   useEffect(() => {
     if (editId) {
       fetchPost(editId);
     }
+    checkPinterestConnection();
   }, [editId]);
+
+  const checkPinterestConnection = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      setPinterestConnected(userData.pinterest_connected || false);
+    }
+  };
 
   const fetchPost = async (postId) => {
     try {
