@@ -45,7 +45,7 @@ function Dashboard() {
     if (!window.confirm('Are you sure you want to delete this post?')) return;
 
     try {
-      await api.delete(`/api/posts/${postId}`);
+      await api.delete(`/posts/${postId}`);
       setPosts(posts.filter((post) => post._id !== postId));
     } catch (err) {
       alert('Failed to delete post');
