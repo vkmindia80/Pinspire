@@ -17,7 +17,7 @@ function BoardSelector({ selectedBoards, onBoardsChange }) {
     setError('');
 
     try {
-      const response = await api.get('/pinterest/boards');
+      const response = await api.get('/api/pinterest/boards');
       setBoards(response.data.boards || []);
       setIsMock(response.data.is_mock);
     } catch (err) {

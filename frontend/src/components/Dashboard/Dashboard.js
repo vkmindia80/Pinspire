@@ -32,7 +32,7 @@ function Dashboard() {
 
   const fetchPosts = async () => {
     try {
-      const response = await api.get('/posts');
+      const response = await api.get('/api/posts');
       setPosts(response.data.posts);
     } catch (err) {
       setError('Failed to fetch posts');

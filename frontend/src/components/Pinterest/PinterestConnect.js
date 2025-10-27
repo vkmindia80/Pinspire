@@ -21,7 +21,7 @@ function PinterestConnect({ onConnectionChange }) {
 
   const fetchModeInfo = async () => {
     try {
-      const response = await api.get('/pinterest/mode');
+      const response = await api.get('/api/pinterest/mode');
       setModeInfo(response.data);
     } catch (err) {
       console.error('Error fetching Pinterest mode:', err);
@@ -41,7 +41,7 @@ function PinterestConnect({ onConnectionChange }) {
     setError('');
 
     try {
-      const response = await api.get('/pinterest/connect');
+      const response = await api.get('/api/pinterest/connect');
       
       if (response.data.is_mock) {
         // In mock mode, simulate OAuth flow
@@ -60,7 +60,7 @@ function PinterestConnect({ onConnectionChange }) {
     try {
       // Simulate OAuth callback with mock code
       const mockCode = 'mock_auth_code_' + Math.random().toString(36).substr(2, 9);
-      const response = await api.post('/pinterest/callback', {
+      const response = await api.post('/api/pinterest/callback', {
         code: mockCode,
         state: state
       });
@@ -91,7 +91,7 @@ function PinterestConnect({ onConnectionChange }) {
 
     setLoading(true);
     try {
-      await api.post('/pinterest/disconnect');
+      await api.post('/api/pinterest/disconnect');
       setIsConnected(false);
       
       // Update user in localStorage

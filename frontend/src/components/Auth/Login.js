@@ -26,7 +26,7 @@ function Login({ onLogin }) {
     setError('');
 
     try {
-      const response = await api.post('/auth/login', formData);
+      const response = await api.post('/api/auth/login', formData);
       const { access_token, user } = response.data;
       
       onLogin(access_token, user);
@@ -49,7 +49,7 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', demoCredentials);
+      const response = await api.post('/api/auth/login', demoCredentials);
       const { access_token, user } = response.data;
       
       onLogin(access_token, user);
