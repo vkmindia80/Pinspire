@@ -47,15 +47,22 @@ Aggressive Hot Module Replacement (HMR) configuration in `vite.config.js` was ca
 - `/app/frontend/vite.config.js`
 
 **Removed Problematic Settings:**
-- `allowedHosts` configuration (hardcoded domain)
 - HMR `host` setting (causing connection issues)
 - HMR `timeout: 30000` (too aggressive)
 - HMR `overlay: false` (hiding important errors)
 - `watch.usePolling` and `watch.interval` (causing unnecessary file checks)
 
+**Kept Essential Settings:**
+- `allowedHosts` configuration (required for preview domain access)
+
 **Simplified Configuration:**
 ```javascript
 // New clean HMR configuration
+allowedHosts: [
+  'codebase-cleaner.preview.emergentagent.com',
+  '.preview.emergentagent.com',
+  'localhost'
+],
 hmr: {
   clientPort: 443,
   overlay: true
