@@ -325,8 +325,8 @@ bash /app/check_status.sh
 
 ## Health Check URLs
 
-- **Frontend:** https://codebase-review-43.preview.emergentagent.com/
-- **Backend:** https://codebase-review-43.preview.emergentagent.com/api/ (should return 404, means it's running)
+- **Frontend:** https://next-steps-dev-1.preview.emergentagent.com/
+- **Backend:** https://next-steps-dev-1.preview.emergentagent.com/api/ (should return 404, means it's running)
 - **API Docs:** http://localhost:8001/docs (local only)
 
 ---

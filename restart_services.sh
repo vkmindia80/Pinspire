@@ -37,7 +37,7 @@ if [ "$BACKEND_STATUS" == "running" ] && [ "$FRONTEND_STATUS" == "Pinspire" ]; t
     echo "✅ All services started successfully!"
     echo ""
     echo "🌐 Access your app:"
-    echo "   https://codebase-review-43.preview.emergentagent.com"
+    echo "   https://next-steps-dev-1.preview.emergentagent.com"
 else
     echo "⚠️  Some services may have issues. Run ./check_status.sh for details."
 fi
