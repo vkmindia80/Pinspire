@@ -91,7 +91,7 @@ function PinterestConnect({ onConnectionChange }) {
 
     setLoading(true);
     try {
-      await api.post('/api/pinterest/disconnect');
+      await api.post('/pinterest/disconnect');
       setIsConnected(false);
       
       // Update user in localStorage
