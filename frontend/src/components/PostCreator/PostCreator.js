@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Sparkles, Image as ImageIcon, Calendar, Save, Send, Loader2, Hash } from 'lucide-react';
+import { Sparkles, Image as ImageIcon, Calendar, Save, Send, Loader2, Hash, Upload } from 'lucide-react';
 import api from '../../services/api';
 import Loader from '../Common/Loader';
+import BoardSelector from '../Pinterest/BoardSelector';
 
 function PostCreator() {
   const navigate = useNavigate();
