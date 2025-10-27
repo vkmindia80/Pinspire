@@ -355,10 +355,22 @@ async def delete_post(post_id: str, current_user: dict = Depends(get_current_use
     return {"message": "Post deleted successfully"}
 
 # Pinterest Integration Routes
+
+# Cache for mode info (expires after restart)
+_pinterest_mode_cache = None
+
 @app.get("/api/pinterest/mode")
 async def get_pinterest_mode():
     """Get information about Pinterest integration mode (mock vs real)"""
-    return pinterest_service.get_mode_info()
+    global _pinterest_mode_cache
+    
+    # Return cached result if available
+    if _pinterest_mode_cache is not None:
+        return _pinterest_mode_cache
+    
+    # Fetch and cache the mode info
+    _pinterest_mode_cache = pinterest_service.get_mode_info()
+    return _pinterest_mode_cache
 
 @app.get("/api/pinterest/connect")
 async def connect_pinterest(current_user: dict = Depends(get_current_user)):
