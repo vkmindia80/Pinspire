@@ -308,42 +308,185 @@ async def delete_post(post_id: str, current_user: dict = Depends(get_current_use
         raise HTTPException(status_code=404, detail="Post not found")
     return {"message": "Post deleted successfully"}
 
-# Pinterest Integration Routes (Placeholder)
+# Pinterest Integration Routes
+@app.get("/api/pinterest/mode")
+async def get_pinterest_mode():
+    """Get information about Pinterest integration mode (mock vs real)"""
+    return pinterest_service.get_mode_info()
+
+@app.get("/api/pinterest/connect")
+async def connect_pinterest(current_user: dict = Depends(get_current_user)):
+    """Initiate Pinterest OAuth flow"""
+    try:
+        # Generate state token for security
+        state = str(uuid.uuid4())
+        
+        # Store state in user document for verification
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {"pinterest_oauth_state": state}}
+        )
+        
+        # Get authorization URL
+        auth_url = pinterest_service.get_authorization_url(state)
+        
+        return {
+            "auth_url": auth_url,
+            "state": state,
+            "is_mock": pinterest_service.is_mock
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error initiating Pinterest connection: {str(e)}")
+
+@app.post("/api/pinterest/callback")
+async def pinterest_callback(code: str, state: str, current_user: dict = Depends(get_current_user)):
+    """Handle Pinterest OAuth callback"""
+    try:
+        # Verify state
+        user = await db.users.find_one({"_id": current_user["_id"]})
+        if user.get("pinterest_oauth_state") != state:
+            raise HTTPException(status_code=400, detail="Invalid state parameter")
+        
+        # Exchange code for tokens
+        token_data = await pinterest_service.exchange_code_for_token(code)
+        
+        # Get user info from Pinterest
+        try:
+            pinterest_user_info = await pinterest_service.get_user_info(token_data["access_token"])
+        except:
+            pinterest_user_info = {"username": "pinterest_user"}
+        
+        # Store tokens in database (in production, encrypt these!)
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {
+                "pinterest_connected": True,
+                "pinterest_access_token": token_data["access_token"],
+                "pinterest_refresh_token": token_data.get("refresh_token"),
+                "pinterest_token_expires": (datetime.utcnow() + timedelta(seconds=token_data.get("expires_in", 3600))).isoformat(),
+                "pinterest_username": pinterest_user_info.get("username"),
+                "pinterest_oauth_state": None,
+                "updated_at": datetime.utcnow().isoformat()
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": "Pinterest connected successfully",
+            "username": pinterest_user_info.get("username"),
+            "is_mock": pinterest_service.is_mock
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error connecting Pinterest: {str(e)}")
+
+@app.post("/api/pinterest/disconnect")
+async def disconnect_pinterest(current_user: dict = Depends(get_current_user)):
+    """Disconnect Pinterest account"""
+    try:
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {
+                "pinterest_connected": False,
+                "pinterest_access_token": None,
+                "pinterest_refresh_token": None,
+                "pinterest_token_expires": None,
+                "pinterest_username": None,
+                "updated_at": datetime.utcnow().isoformat()
+            }}
+        )
+        
+        return {"success": True, "message": "Pinterest disconnected successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error disconnecting Pinterest: {str(e)}")
+
 @app.get("/api/pinterest/boards")
 async def get_pinterest_boards(current_user: dict = Depends(get_current_user)):
-    # Placeholder - will be implemented with actual Pinterest API
+    """Fetch user's Pinterest boards"""
     if not current_user.get("pinterest_connected"):
-        raise HTTPException(status_code=400, detail="Pinterest not connected")
+        raise HTTPException(status_code=400, detail="Pinterest not connected. Please connect your Pinterest account first.")
     
-    # Mock boards for now
-    mock_boards = [
-        {"id": "board1", "name": "My Inspiration Board"},
-        {"id": "board2", "name": "Design Ideas"},
-        {"id": "board3", "name": "Marketing Tips"}
-    ]
-    
-    return {"boards": mock_boards}
+    try:
+        access_token = current_user.get("pinterest_access_token")
+        
+        # Check if token needs refresh
+        token_expires = current_user.get("pinterest_token_expires")
+        if token_expires:
+            expires_dt = datetime.fromisoformat(token_expires)
+            if expires_dt < datetime.utcnow() + timedelta(minutes=5):
+                # Token expired or expiring soon, refresh it
+                refresh_token = current_user.get("pinterest_refresh_token")
+                if refresh_token:
+                    token_data = await pinterest_service.refresh_access_token(refresh_token)
+                    access_token = token_data["access_token"]
+                    
+                    # Update tokens in database
+                    await db.users.update_one(
+                        {"_id": current_user["_id"]},
+                        {"$set": {
+                            "pinterest_access_token": access_token,
+                            "pinterest_token_expires": (datetime.utcnow() + timedelta(seconds=token_data.get("expires_in", 3600))).isoformat()
+                        }}
+                    )
+        
+        # Fetch boards
+        boards = await pinterest_service.get_user_boards(access_token)
+        
+        return {
+            "boards": boards,
+            "is_mock": pinterest_service.is_mock
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching boards: {str(e)}")
 
 @app.post("/api/pinterest/post/{post_id}")
-async def post_to_pinterest(post_id: str, current_user: dict = Depends(get_current_user)):
-    post = await db.posts.find_one({"_id": post_id, "user_id": current_user["_id"]})
-    if not post:
-        raise HTTPException(status_code=404, detail="Post not found")
-    
+async def post_to_pinterest(post_id: str, board_ids: List[str], current_user: dict = Depends(get_current_user)):
+    """Post a pin to Pinterest board(s)"""
     if not current_user.get("pinterest_connected"):
         raise HTTPException(status_code=400, detail="Pinterest not connected")
     
-    # Placeholder - will be implemented with actual Pinterest API
-    await db.posts.update_one(
-        {"_id": post_id},
-        {"$set": {
-            "status": "published",
-            "published_at": datetime.utcnow().isoformat(),
-            "pinterest_post_id": f"mock_pin_{uuid.uuid4()}"
-        }}
-    )
-    
-    return {"message": "Post published to Pinterest successfully (mock)", "success": True}
+    try:
+        # Get post
+        post = await db.posts.find_one({"_id": post_id, "user_id": current_user["_id"]})
+        if not post:
+            raise HTTPException(status_code=404, detail="Post not found")
+        
+        if not post.get("image_url"):
+            raise HTTPException(status_code=400, detail="Post must have an image to post to Pinterest")
+        
+        access_token = current_user.get("pinterest_access_token")
+        
+        # Create pins on selected boards
+        pin_ids = []
+        for board_id in board_ids:
+            pin_result = await pinterest_service.create_pin(
+                access_token=access_token,
+                board_id=board_id,
+                title=post.get("caption", "")[:100],  # Pinterest title limit
+                description=post.get("caption", ""),
+                image_url=post.get("image_url"),
+                link=None
+            )
+            pin_ids.append(pin_result.get("id"))
+        
+        # Update post status
+        await db.posts.update_one(
+            {"_id": post_id},
+            {"$set": {
+                "status": "published",
+                "published_at": datetime.utcnow().isoformat(),
+                "pinterest_post_ids": pin_ids,
+                "pinterest_boards_posted": board_ids
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": f"Post published to {len(board_ids)} board(s) successfully",
+            "pin_ids": pin_ids,
+            "is_mock": pinterest_service.is_mock
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error posting to Pinterest: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
