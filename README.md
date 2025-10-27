@@ -11,7 +11,10 @@
 
 ### 🤖 AI-Powered Content Creation
 - **Smart Caption Generation**: GPT-4o generates engaging, Pinterest-optimized captions
-- **AI Image Generation**: DALL-E 3 creates stunning visuals from text prompts
+- **AI Image Generation**: DALL-E (gpt-image-1) creates stunning visuals from text prompts 🆕
+- **Image Size Options**: Square (1024x1024), Landscape (1792x1024), Portrait (1024x1792) 🆕
+- **Quality Settings**: Standard or HD quality 🆕
+- **Style Control**: Natural or Vivid styles for different aesthetics 🆕
 - **Hashtag Suggestions**: AI-powered hashtag recommendations for maximum reach
 - **Tone Customization**: Choose from multiple tones (engaging, professional, casual, etc.)
 
