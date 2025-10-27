@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pin } from 'lucide-react';
+import { Pin, Sparkles } from 'lucide-react';
 import api from '../../services/api';
 
 function Login({ onLogin }) {
