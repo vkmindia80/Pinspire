@@ -404,9 +404,9 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 12. Stats dashboard with visual metrics
 
 ### Planned ⏳
-10. Scheduled posts publish automatically (Phase 6)
-11. Analytics and insights available (Phase 7)
-12. Real Pinterest posting enabled (when credentials added)
+13. Scheduled posts publish automatically (Phase 7)
+14. Analytics and insights available (Phase 8)
+15. Real Pinterest posting enabled (when credentials added)
 
 ---
 
