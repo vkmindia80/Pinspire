@@ -97,9 +97,13 @@ function Dashboard() {
         </div>
       )}
 
+      {/* Pinterest Connection Section */}
+      <div className="mb-8">
+        <PinterestConnect onConnectionChange={handleConnectionChange} />
+      </div>
+
       {/* Filters */}
-      <div className="flex space-x-2 mb-6">
-        {['all', 'draft', 'scheduled', 'published'].map((filterOption) => (
+      <div className="flex space-x-2 mb-6">{['all', 'draft', 'scheduled', 'published'].map((filterOption) => (
           <button
             key={filterOption}
             onClick={() => setFilter(filterOption)}
