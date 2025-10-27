@@ -60,7 +60,7 @@ function PinterestConnect({ onConnectionChange }) {
     try {
       // Simulate OAuth callback with mock code
       const mockCode = 'mock_auth_code_' + Math.random().toString(36).substr(2, 9);
-      const response = await api.post('/api/pinterest/callback', {
+      const response = await api.post('/pinterest/callback', {
         code: mockCode,
         state: state
       });
