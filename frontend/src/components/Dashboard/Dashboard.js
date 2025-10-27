@@ -11,10 +11,24 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
+  const [pinterestConnected, setPinterestConnected] = useState(false);
 
   useEffect(() => {
     fetchPosts();
+    checkPinterestConnection();
   }, []);
+
+  const checkPinterestConnection = () => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const userData = JSON.parse(user);
+      setPinterestConnected(userData.pinterest_connected || false);
+    }
+  };
+
+  const handleConnectionChange = (isConnected) => {
+    setPinterestConnected(isConnected);
+  };
 
   const fetchPosts = async () => {
     try {
