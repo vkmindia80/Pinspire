@@ -182,6 +182,60 @@ function PostCreator() {
     }
   };
 
+  const handlePostToPinterest = async () => {
+    if (!pinterestConnected) {
+      setError('Please connect your Pinterest account first from the Dashboard');
+      return;
+    }
+
+    if (!formData.caption.trim()) {
+      setError('Please add a caption');
+      return;
+    }
+
+    if (!formData.image_url) {
+      setError('Please add an image URL to post to Pinterest');
+      return;
+    }
+
+    if (selectedBoards.length === 0) {
+      setError('Please select at least one board');
+      return;
+    }
+
+    setPostingToPinterest(true);
+    setError('');
+
+    try {
+      // First save the post if it's new
+      let postId = editId;
+      if (!editId) {
+        const saveResponse = await api.post('/posts', {
+          ...formData,
+          ai_generated_caption: !!aiSettings.topic,
+          ai_generated_image: !!imagePrompt,
+        });
+        postId = saveResponse.data.post._id;
+      }
+
+      // Then post to Pinterest
+      const response = await api.post(`/pinterest/post/${postId}`, {
+        board_ids: selectedBoards
+      });
+
+      if (response.data.success) {
+        setSuccess(`Posted to Pinterest successfully! ${response.data.is_mock ? '(Mock Mode)' : ''}`);
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000);
+      }
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to post to Pinterest');
+    } finally {
+      setPostingToPinterest(false);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-testid="post-creator">
       <div className="mb-8">
