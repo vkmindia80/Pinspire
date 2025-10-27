@@ -189,10 +189,10 @@ function PostCreator() {
 
     try {
       if (editId) {
-        await api.put(`/api/posts/${editId}`, formData);
+        await api.put(`/posts/${editId}`, formData);
         setSuccess('Post updated successfully!');
       } else {
-        await api.post('/api/posts', {
+        await api.post('/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
