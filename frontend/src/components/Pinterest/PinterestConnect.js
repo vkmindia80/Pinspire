@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../../services/api';
 import { Link2, Check, AlertCircle } from 'lucide-react';
 
@@ -7,10 +7,16 @@ function PinterestConnect({ onConnectionChange }) {
   const [loading, setLoading] = useState(false);
   const [modeInfo, setModeInfo] = useState(null);
   const [error, setError] = useState('');
+  const hasFetchedMode = useRef(false);
 
   useEffect(() => {
     checkConnection();
-    fetchModeInfo();
+    
+    // Only fetch mode info once
+    if (!hasFetchedMode.current) {
+      fetchModeInfo();
+      hasFetchedMode.current = true;
+    }
   }, []);
 
   const fetchModeInfo = async () => {
