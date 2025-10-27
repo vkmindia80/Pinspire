@@ -38,12 +38,27 @@ function Login({ onLogin }) {
     }
   };
 
-  const handleDemoLogin = () => {
-    setFormData({
+  const handleDemoLogin = async () => {
+    const demoCredentials = {
       username: 'testuser',
       password: 'test123',
-    });
+    };
+    
+    setFormData(demoCredentials);
     setError('');
+    setLoading(true);
+
+    try {
+      const response = await api.post('/api/auth/login', demoCredentials);
+      const { access_token, user } = response.data;
+      
+      onLogin(access_token, user);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
