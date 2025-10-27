@@ -12,6 +12,7 @@ import os
 import uuid
 import asyncio
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+from pinterest_service import pinterest_service
 
 # Load environment variables
 load_dotenv()
