@@ -37,7 +37,7 @@ if [ "$BACKEND_STATUS" == "running" ] && [ "$FRONTEND_STATUS" == "Pinspire" ]; t
     echo "✅ All services started successfully!"
     echo ""
     echo "🌐 Access your app:"
-    echo "   https://connect-git.preview.emergentagent.com"
+    echo "   https://smartcaption-2.preview.emergentagent.com"
 else
     echo "⚠️  Some services may have issues. Run ./check_status.sh for details."
 fi
