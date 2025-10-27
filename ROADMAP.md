@@ -297,7 +297,7 @@ frontend/
 - `GET /api/auth/me` - Get current user
 
 ### AI Generation
-- `POST /api/ai/generate-caption` - Generate caption using GPT-4o
+- `POST /api/ai/generate-caption` - Generate comprehensive content (title, caption, description, boards, topics)
 - `POST /api/ai/generate-image` - Generate image using DALL-E 3
 - `POST /api/ai/suggest-hashtags` - Get hashtag suggestions
 
