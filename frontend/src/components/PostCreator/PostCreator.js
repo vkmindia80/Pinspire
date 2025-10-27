@@ -60,7 +60,7 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/api/ai/generate-caption', {
+      const response = await api.post('/ai/generate-caption', {
         topic: aiSettings.topic,
         tone: aiSettings.tone,
         keywords: aiSettings.keywords.split(',').map(k => k.trim()).filter(k => k),
@@ -86,7 +86,7 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/api/ai/generate-image', {
+      const response = await api.post('/ai/generate-image', {
         prompt: imagePrompt,
       });
 
@@ -114,7 +114,7 @@ function PostCreator() {
         await api.put(`/api/posts/${editId}`, formData);
         setSuccess('Post updated successfully!');
       } else {
-        await api.post('/api/posts', {
+        await api.post('/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
@@ -150,7 +150,7 @@ function PostCreator() {
       if (editId) {
         await api.put(`/api/posts/${editId}`, formData);
       } else {
-        await api.post('/api/posts', {
+        await api.post('/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
