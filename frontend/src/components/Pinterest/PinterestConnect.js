@@ -137,7 +137,10 @@ function PinterestConnect({ onConnectionChange }) {
           <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
           <div className="text-sm text-yellow-800">
             <p className="font-medium">Mock Mode Active</p>
-            <p className="mt-1">Pinterest integration is in testing mode. Posts won't be published to real Pinterest. Update credentials in settings to enable real posting.</p>
+            <p className="mt-1">
+              Pinterest integration is in testing mode. Posts won't be published to real Pinterest. 
+              Go to <a href="/settings" className="font-medium underline hover:text-yellow-900">Settings → Pinterest API</a> to add your credentials and enable real posting.
+            </p>
           </div>
         </div>
       )}
