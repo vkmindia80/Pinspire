@@ -417,15 +417,23 @@ function PostCreator() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Image Prompt
+                  {aiSettings.topic && (
+                    <span className="ml-2 text-xs text-green-600 font-normal">
+                      ✨ Auto-generated from topic
+                    </span>
+                  )}
                 </label>
                 <textarea
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                   rows="3"
-                  placeholder="Describe the image you want to create..."
+                  placeholder="Describe the image you want to create... (will auto-fill when you enter a topic above)"
                   value={imagePrompt}
                   onChange={handleImagePromptChange}
                   data-testid="image-prompt-input"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  💡 Tip: The prompt auto-generates based on your topic. Feel free to edit it for more specific results!
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
