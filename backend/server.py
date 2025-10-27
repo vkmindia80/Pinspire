@@ -28,12 +28,24 @@ app = FastAPI(title="Pinspire API")
 from collections import defaultdict, deque
 import time
 
-request_tracker = defaultdict(lambda: deque(maxlen=100))  # Track last 100 requests per IP
+request_tracker = defaultdict(lambda: deque(maxlen=500))  # Track last 500 requests per IP
 RATE_LIMIT_WINDOW = 60  # seconds
-MAX_REQUESTS_PER_WINDOW = 100  # requests
+MAX_REQUESTS_PER_WINDOW = 300  # Increased to 300 requests per minute
+
+# Paths that should be excluded from rate limiting
+RATE_LIMIT_EXCLUDE_PATHS = [
+    "/",
+    "/docs",
+    "/openapi.json",
+    "/api/pinterest/mode"  # Cached endpoint, no need to rate limit
+]
 
 async def rate_limit_check(request):
     """Simple rate limiting middleware"""
+    # Skip rate limiting for excluded paths
+    if request.url.path in RATE_LIMIT_EXCLUDE_PATHS:
+        return
+    
     client_ip = request.client.host
     current_time = time.time()
     
@@ -45,7 +57,7 @@ async def rate_limit_check(request):
     if len(request_tracker[client_ip]) >= MAX_REQUESTS_PER_WINDOW:
         raise HTTPException(
             status_code=429,
-            detail=f"Rate limit exceeded. Maximum {MAX_REQUESTS_PER_WINDOW} requests per {RATE_LIMIT_WINDOW} seconds."
+            detail=f"Rate limit exceeded. Maximum {MAX_REQUESTS_PER_WINDOW} requests per {RATE_LIMIT_WINDOW} seconds. Please slow down."
         )
     
     # Add current request
@@ -55,17 +67,18 @@ async def rate_limit_check(request):
 @app.middleware("http")
 async def rate_limiting_middleware(request, call_next):
     """Apply rate limiting to all requests"""
+    # Process the request first, then check rate limit
+    # This prevents interfering with response generation
     try:
         await rate_limit_check(request)
+        response = await call_next(request)
+        return response
     except HTTPException as e:
         from fastapi.responses import JSONResponse
         return JSONResponse(
             status_code=e.status_code,
             content={"detail": e.detail}
         )
-    
-    response = await call_next(request)
-    return response
 
 # CORS configuration
 app.add_middleware(
