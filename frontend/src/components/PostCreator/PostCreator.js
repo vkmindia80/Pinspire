@@ -172,9 +172,18 @@ function PostCreator() {
         keywords: aiSettings.keywords.split(',').map(k => k.trim()).filter(k => k),
       });
 
-      setFormData(prev => ({ ...prev, caption: response.data.caption }));
-      setSuccess('Caption generated successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      // Update form with all generated data
+      setFormData(prev => ({ 
+        ...prev, 
+        title: response.data.title || '',
+        caption: response.data.caption || '',
+        description: response.data.description || '',
+        suggested_boards: response.data.suggested_boards || [],
+        tagged_topics: response.data.tagged_topics || [],
+      }));
+      
+      setSuccess('All content generated successfully! ✨ Title, Caption, Description, Board suggestions, and Topics are ready.');
+      setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to generate caption');
     } finally {
