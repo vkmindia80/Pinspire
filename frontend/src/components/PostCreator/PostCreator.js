@@ -12,10 +12,15 @@ function PostCreator() {
 
   // Form data state
   const [formData, setFormData] = useState({
+    title: '',
     caption: '',
+    description: '',
+    link_url: '',
     image_url: '',
     scheduled_time: '',
     boards: [],
+    suggested_boards: [],
+    tagged_topics: [],
   });
 
   // AI settings state
