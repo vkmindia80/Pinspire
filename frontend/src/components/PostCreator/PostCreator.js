@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Image as ImageIcon, Calendar, Save, Send, Loader2, Hash, Upload } from 'lucide-react';
 import api from '../../services/api';
@@ -10,6 +10,7 @@ function PostCreator() {
   const [searchParams] = useSearchParams();
   const editId = searchParams.get('edit');
 
+  // Form data state
   const [formData, setFormData] = useState({
     caption: '',
     image_url: '',
@@ -17,18 +18,22 @@ function PostCreator() {
     boards: [],
   });
 
+  // AI settings state
   const [aiSettings, setAiSettings] = useState({
     topic: '',
     tone: 'engaging',
     keywords: '',
   });
 
+  // Image generation state
   const [imagePrompt, setImagePrompt] = useState('');
   const [imageSettings, setImageSettings] = useState({
     size: '1024x1024',
     quality: 'standard',
     style: 'vivid'
   });
+
+  // UI state
   const [loading, setLoading] = useState(false);
   const [generatingCaption, setGeneratingCaption] = useState(false);
   const [generatingImage, setGeneratingImage] = useState(false);
@@ -39,35 +44,80 @@ function PostCreator() {
   const [pinterestConnected, setPinterestConnected] = useState(false);
   const [postingToPinterest, setPostingToPinterest] = useState(false);
 
+  // Check Pinterest connection on mount only
   useEffect(() => {
-    if (editId) {
-      fetchPost(editId);
-    }
-    checkPinterestConnection();
-  }, [editId]);
-
-  const checkPinterestConnection = () => {
     const user = localStorage.getItem('user');
     if (user) {
-      const userData = JSON.parse(user);
-      setPinterestConnected(userData.pinterest_connected || false);
+      try {
+        const userData = JSON.parse(user);
+        setPinterestConnected(userData.pinterest_connected || false);
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
     }
-  };
+  }, []);
 
-  const fetchPost = async (postId) => {
-    try {
-      const response = await api.get(`/posts/${postId}`);
-      const post = response.data.post;
-      setFormData({
-        caption: post.caption || '',
-        image_url: post.image_url || '',
-        scheduled_time: post.scheduled_time || '',
-        boards: post.boards || [],
-      });
-    } catch (err) {
-      setError('Failed to fetch post');
+  // Fetch post if editing (only when editId changes)
+  useEffect(() => {
+    if (editId) {
+      const fetchPost = async () => {
+        try {
+          const response = await api.get(`/api/posts/${editId}`);
+          const post = response.data.post;
+          setFormData({
+            caption: post.caption || '',
+            image_url: post.image_url || '',
+            scheduled_time: post.scheduled_time || '',
+            boards: post.boards || [],
+          });
+        } catch (err) {
+          setError('Failed to fetch post');
+        }
+      };
+      fetchPost();
     }
-  };
+  }, [editId]);
+
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleCaptionChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, caption: e.target.value }));
+  }, []);
+
+  const handleImageUrlChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, image_url: e.target.value }));
+  }, []);
+
+  const handleScheduleTimeChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, scheduled_time: e.target.value }));
+  }, []);
+
+  const handleTopicChange = useCallback((e) => {
+    setAiSettings(prev => ({ ...prev, topic: e.target.value }));
+  }, []);
+
+  const handleToneChange = useCallback((e) => {
+    setAiSettings(prev => ({ ...prev, tone: e.target.value }));
+  }, []);
+
+  const handleKeywordsChange = useCallback((e) => {
+    setAiSettings(prev => ({ ...prev, keywords: e.target.value }));
+  }, []);
+
+  const handleImagePromptChange = useCallback((e) => {
+    setImagePrompt(e.target.value);
+  }, []);
+
+  const handleImageSizeChange = useCallback((e) => {
+    setImageSettings(prev => ({ ...prev, size: e.target.value }));
+  }, []);
+
+  const handleImageQualityChange = useCallback((e) => {
+    setImageSettings(prev => ({ ...prev, quality: e.target.value }));
+  }, []);
+
+  const handleImageStyleChange = useCallback((e) => {
+    setImageSettings(prev => ({ ...prev, style: e.target.value }));
+  }, []);
 
   const handleGenerateCaption = async () => {
     if (!aiSettings.topic.trim()) {
@@ -79,13 +129,13 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/ai/generate-caption', {
+      const response = await api.post('/api/ai/generate-caption', {
         topic: aiSettings.topic,
         tone: aiSettings.tone,
         keywords: aiSettings.keywords.split(',').map(k => k.trim()).filter(k => k),
       });
 
-      setFormData({ ...formData, caption: response.data.caption });
+      setFormData(prev => ({ ...prev, caption: response.data.caption }));
       setSuccess('Caption generated successfully!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -105,16 +155,15 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/ai/generate-image', {
+      const response = await api.post('/api/ai/generate-image', {
         prompt: imagePrompt,
         size: imageSettings.size,
         quality: imageSettings.quality,
         style: imageSettings.style
       });
 
-      setFormData({ ...formData, image_url: response.data.image_url });
+      setFormData(prev => ({ ...prev, image_url: response.data.image_url }));
       
-      // Show revised prompt if available
       if (response.data.revised_prompt && response.data.revised_prompt !== imagePrompt) {
         setSuccess(`Image generated successfully! DALL-E refined your prompt: "${response.data.revised_prompt.substring(0, 100)}..."`);
       } else {
@@ -140,10 +189,10 @@ function PostCreator() {
 
     try {
       if (editId) {
-        await api.put(`/posts/${editId}`, formData);
+        await api.put(`/api/posts/${editId}`, formData);
         setSuccess('Post updated successfully!');
       } else {
-        await api.post('/posts', {
+        await api.post('/api/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
@@ -177,9 +226,9 @@ function PostCreator() {
 
     try {
       if (editId) {
-        await api.put(`/posts/${editId}`, formData);
+        await api.put(`/api/posts/${editId}`, formData);
       } else {
-        await api.post('/posts', {
+        await api.post('/api/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
@@ -222,10 +271,9 @@ function PostCreator() {
     setError('');
 
     try {
-      // First save the post if it's new
       let postId = editId;
       if (!editId) {
-        const saveResponse = await api.post('/posts', {
+        const saveResponse = await api.post('/api/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
@@ -233,8 +281,7 @@ function PostCreator() {
         postId = saveResponse.data.post._id;
       }
 
-      // Then post to Pinterest
-      const response = await api.post(`/pinterest/post/${postId}`, {
+      const response = await api.post(`/api/pinterest/post/${postId}`, {
         board_ids: selectedBoards
       });
 
@@ -292,7 +339,7 @@ function PostCreator() {
                   rows="3"
                   placeholder="E.g., Healthy breakfast recipes, Summer fashion trends..."
                   value={aiSettings.topic}
-                  onChange={(e) => setAiSettings({ ...aiSettings, topic: e.target.value })}
+                  onChange={handleTopicChange}
                   data-testid="caption-topic-input"
                 />
               </div>
@@ -302,7 +349,7 @@ function PostCreator() {
                 <select
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                   value={aiSettings.tone}
-                  onChange={(e) => setAiSettings({ ...aiSettings, tone: e.target.value })}
+                  onChange={handleToneChange}
                   data-testid="caption-tone-select"
                 >
                   <option value="engaging">Engaging</option>
@@ -322,7 +369,7 @@ function PostCreator() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                   placeholder="E.g., recipe, healthy, breakfast"
                   value={aiSettings.keywords}
-                  onChange={(e) => setAiSettings({ ...aiSettings, keywords: e.target.value })}
+                  onChange={handleKeywordsChange}
                   data-testid="caption-keywords-input"
                 />
               </div>
@@ -366,7 +413,7 @@ function PostCreator() {
                   rows="3"
                   placeholder="Describe the image you want to create..."
                   value={imagePrompt}
-                  onChange={(e) => setImagePrompt(e.target.value)}
+                  onChange={handleImagePromptChange}
                   data-testid="image-prompt-input"
                 />
               </div>
@@ -377,7 +424,7 @@ function PostCreator() {
                   <select
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red text-sm"
                     value={imageSettings.size}
-                    onChange={(e) => setImageSettings({ ...imageSettings, size: e.target.value })}
+                    onChange={handleImageSizeChange}
                     data-testid="image-size-select"
                   >
                     <option value="1024x1024">Square (1024x1024)</option>
@@ -391,7 +438,7 @@ function PostCreator() {
                   <select
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red text-sm"
                     value={imageSettings.quality}
-                    onChange={(e) => setImageSettings({ ...imageSettings, quality: e.target.value })}
+                    onChange={handleImageQualityChange}
                     data-testid="image-quality-select"
                   >
                     <option value="standard">Standard</option>
@@ -405,7 +452,7 @@ function PostCreator() {
                 <select
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                   value={imageSettings.style}
-                  onChange={(e) => setImageSettings({ ...imageSettings, style: e.target.value })}
+                  onChange={handleImageStyleChange}
                   data-testid="image-style-select"
                 >
                   <option value="vivid">Vivid (More dramatic, colorful)</option>
@@ -441,7 +488,7 @@ function PostCreator() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                   placeholder="https://example.com/image.jpg"
                   value={formData.image_url}
-                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  onChange={handleImageUrlChange}
                   data-testid="image-url-input"
                 />
               </div>
@@ -490,7 +537,7 @@ function PostCreator() {
               rows="6"
               placeholder="Write or generate your caption..."
               value={formData.caption}
-              onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
+              onChange={handleCaptionChange}
               data-testid="caption-editor"
             />
             <p className="text-xs text-gray-500 mt-2">
@@ -513,7 +560,7 @@ function PostCreator() {
                 type="datetime-local"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
                 value={formData.scheduled_time}
-                onChange={(e) => setFormData({ ...formData, scheduled_time: e.target.value })}
+                onChange={handleScheduleTimeChange}
                 data-testid="schedule-time-input"
               />
             </div>

@@ -4,8 +4,6 @@ import './index.css';
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+
+// Removed StrictMode to prevent double-rendering issues that can cause flickering
+root.render(<App />);
