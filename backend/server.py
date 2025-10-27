@@ -557,17 +557,22 @@ async def delete_pinterest_credentials(current_user: dict = Depends(get_current_
 _pinterest_mode_cache = None
 
 @app.get("/api/pinterest/mode")
-async def get_pinterest_mode():
+async def get_pinterest_mode(current_user: dict = Depends(get_current_user)):
     """Get information about Pinterest integration mode (mock vs real)"""
-    global _pinterest_mode_cache
+    # Check if user has custom credentials
+    user_credentials = current_user.get("pinterest_credentials", {})
+    has_user_credentials = bool(user_credentials.get("app_id") and user_credentials.get("app_secret"))
     
-    # Return cached result if available
-    if _pinterest_mode_cache is not None:
-        return _pinterest_mode_cache
-    
-    # Fetch and cache the mode info
-    _pinterest_mode_cache = pinterest_service.get_mode_info()
-    return _pinterest_mode_cache
+    if has_user_credentials:
+        # User has their own credentials - real mode
+        return {
+            "is_mock": False,
+            "mode": "real",
+            "message": "Using your Pinterest API credentials"
+        }
+    else:
+        # No user credentials - mock mode
+        return pinterest_service.get_mode_info()
 
 @app.get("/api/pinterest/connect")
 async def connect_pinterest(current_user: dict = Depends(get_current_user)):
