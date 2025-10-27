@@ -89,8 +89,20 @@ function PostCreator() {
   }, [editId]);
 
   // Memoized handlers to prevent unnecessary re-renders
+  const handleTitleChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, title: e.target.value }));
+  }, []);
+
   const handleCaptionChange = useCallback((e) => {
     setFormData(prev => ({ ...prev, caption: e.target.value }));
+  }, []);
+
+  const handleDescriptionChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, description: e.target.value }));
+  }, []);
+
+  const handleLinkUrlChange = useCallback((e) => {
+    setFormData(prev => ({ ...prev, link_url: e.target.value }));
   }, []);
 
   const handleImageUrlChange = useCallback((e) => {
