@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Calendar, Image, Trash2, Eye, Clock, CheckCircle, FileText } from 'lucide-react';
 import api from '../../services/api';
 import Loader from '../Common/Loader';
+import PinterestConnect from '../Pinterest/PinterestConnect';
 
 function Dashboard() {
   const navigate = useNavigate();
