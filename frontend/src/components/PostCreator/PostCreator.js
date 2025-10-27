@@ -461,28 +461,81 @@ function PostCreator() {
             </div>
           </div>
 
+          {/* Pinterest Board Selection */}
+          {pinterestConnected && (
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900">Pinterest Boards</h2>
+                <button
+                  onClick={() => setShowBoardSelector(!showBoardSelector)}
+                  className="text-sm text-pinterest-red hover:text-pinterest-hover font-medium"
+                >
+                  {showBoardSelector ? 'Hide' : 'Select Boards'}
+                </button>
+              </div>
+
+              {showBoardSelector && (
+                <BoardSelector
+                  selectedBoards={selectedBoards}
+                  onBoardsChange={setSelectedBoards}
+                />
+              )}
+
+              {!showBoardSelector && selectedBoards.length > 0 && (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800">
+                  <p className="font-medium">{selectedBoards.length} board(s) selected</p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex space-x-3">
-              <button
-                onClick={handleSaveDraft}
-                disabled={loading}
-                className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
-                data-testid="save-draft-button"
-              >
-                <Save className="h-5 w-5" />
-                <span>{loading ? 'Saving...' : 'Save Draft'}</span>
-              </button>
+            <div className="space-y-3">
+              <div className="flex space-x-3">
+                <button
+                  onClick={handleSaveDraft}
+                  disabled={loading}
+                  className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition disabled:opacity-50"
+                  data-testid="save-draft-button"
+                >
+                  <Save className="h-5 w-5" />
+                  <span>{loading ? 'Saving...' : 'Save Draft'}</span>
+                </button>
 
-              <button
-                onClick={handleSchedulePost}
-                disabled={loading}
-                className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-pinterest-red text-white rounded-lg hover:bg-pinterest-hover transition disabled:opacity-50"
-                data-testid="schedule-post-button"
-              >
-                <Send className="h-5 w-5" />
-                <span>{loading ? 'Scheduling...' : 'Schedule Post'}</span>
-              </button>
+                <button
+                  onClick={handleSchedulePost}
+                  disabled={loading}
+                  className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  data-testid="schedule-post-button"
+                >
+                  <Calendar className="h-5 w-5" />
+                  <span>{loading ? 'Scheduling...' : 'Schedule Post'}</span>
+                </button>
+              </div>
+
+              {pinterestConnected && (
+                <button
+                  onClick={handlePostToPinterest}
+                  disabled={postingToPinterest || selectedBoards.length === 0}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-pinterest-red text-white rounded-lg hover:bg-pinterest-hover transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="post-to-pinterest-button"
+                >
+                  <Upload className="h-5 w-5" />
+                  <span>
+                    {postingToPinterest
+                      ? 'Posting to Pinterest...'
+                      : `Post to Pinterest ${selectedBoards.length > 0 ? `(${selectedBoards.length} boards)` : ''}`}
+                  </span>
+                </button>
+              )}
+
+              {!pinterestConnected && (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                  <p className="font-medium">Connect Pinterest</p>
+                  <p className="mt-1">Connect your Pinterest account from the Dashboard to post directly to Pinterest.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
