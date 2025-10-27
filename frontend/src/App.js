@@ -92,6 +92,16 @@ function App() {
             }
           />
           <Route
+            path="/pinterest/callback"
+            element={
+              isAuthenticated ? (
+                <PinterestCallback />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
             path="/"
             element={
               isAuthenticated ? (
