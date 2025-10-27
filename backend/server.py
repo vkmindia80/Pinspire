@@ -496,6 +496,63 @@ async def delete_post(post_id: str, current_user: dict = Depends(get_current_use
 
 # Pinterest Integration Routes
 
+@app.get("/api/pinterest/credentials")
+async def get_pinterest_credentials(current_user: dict = Depends(get_current_user)):
+    """Get user's Pinterest API credentials"""
+    credentials = current_user.get("pinterest_credentials", {})
+    
+    # Return credentials but mask the secret
+    if credentials and credentials.get("app_secret"):
+        credentials["app_secret"] = "••••••••" + credentials["app_secret"][-4:] if len(credentials["app_secret"]) > 4 else "••••••••"
+    
+    return {
+        "credentials": credentials if credentials else None
+    }
+
+@app.put("/api/pinterest/credentials")
+async def update_pinterest_credentials(request: PinterestCredentialsRequest, current_user: dict = Depends(get_current_user)):
+    """Save user's Pinterest API credentials"""
+    try:
+        credentials = {
+            "app_id": request.app_id,
+            "app_secret": request.app_secret,
+            "redirect_uri": request.redirect_uri,
+            "updated_at": datetime.utcnow().isoformat()
+        }
+        
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$set": {
+                "pinterest_credentials": credentials,
+                "updated_at": datetime.utcnow().isoformat()
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": "Pinterest credentials saved successfully"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error saving credentials: {str(e)}")
+
+@app.delete("/api/pinterest/credentials")
+async def delete_pinterest_credentials(current_user: dict = Depends(get_current_user)):
+    """Delete user's Pinterest API credentials"""
+    try:
+        await db.users.update_one(
+            {"_id": current_user["_id"]},
+            {"$unset": {
+                "pinterest_credentials": ""
+            }}
+        )
+        
+        return {
+            "success": True,
+            "message": "Pinterest credentials deleted successfully"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting credentials: {str(e)}")
+
 # Cache for mode info (expires after restart)
 _pinterest_mode_cache = None
 
