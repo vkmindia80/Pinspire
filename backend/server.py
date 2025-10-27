@@ -442,7 +442,7 @@ async def get_pinterest_boards(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=f"Error fetching boards: {str(e)}")
 
 @app.post("/api/pinterest/post/{post_id}")
-async def post_to_pinterest(post_id: str, board_ids: List[str], current_user: dict = Depends(get_current_user)):
+async def post_to_pinterest(post_id: str, request: PinterestPostRequest, current_user: dict = Depends(get_current_user)):
     """Post a pin to Pinterest board(s)"""
     if not current_user.get("pinterest_connected"):
         raise HTTPException(status_code=400, detail="Pinterest not connected")
@@ -460,7 +460,7 @@ async def post_to_pinterest(post_id: str, board_ids: List[str], current_user: di
         
         # Create pins on selected boards
         pin_ids = []
-        for board_id in board_ids:
+        for board_id in request.board_ids:
             pin_result = await pinterest_service.create_pin(
                 access_token=access_token,
                 board_id=board_id,
@@ -478,13 +478,13 @@ async def post_to_pinterest(post_id: str, board_ids: List[str], current_user: di
                 "status": "published",
                 "published_at": datetime.utcnow().isoformat(),
                 "pinterest_post_ids": pin_ids,
-                "pinterest_boards_posted": board_ids
+                "pinterest_boards_posted": request.board_ids
             }}
         )
         
         return {
             "success": True,
-            "message": f"Post published to {len(board_ids)} board(s) successfully",
+            "message": f"Post published to {len(request.board_ids)} board(s) successfully",
             "pin_ids": pin_ids,
             "is_mock": pinterest_service.is_mock
         }
