@@ -14,7 +14,13 @@ export default defineConfig({
     ],
     hmr: {
       clientPort: 443,
-      host: 'pinpost-scheduler.preview.emergentagent.com'
+      host: 'pinpost-scheduler.preview.emergentagent.com',
+      timeout: 30000,  // Increase timeout
+      overlay: false   // Disable error overlay that might cause refresh
+    },
+    watch: {
+      usePolling: false,  // Disable polling which can cause issues
+      interval: 1000
     },
     proxy: {
       '/api': {
