@@ -107,11 +107,21 @@ function PostCreator() {
     try {
       const response = await api.post('/ai/generate-image', {
         prompt: imagePrompt,
+        size: imageSettings.size,
+        quality: imageSettings.quality,
+        style: imageSettings.style
       });
 
       setFormData({ ...formData, image_url: response.data.image_url });
-      setSuccess('Image generated successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      
+      // Show revised prompt if available
+      if (response.data.revised_prompt && response.data.revised_prompt !== imagePrompt) {
+        setSuccess(`Image generated successfully! DALL-E refined your prompt: "${response.data.revised_prompt.substring(0, 100)}..."`);
+      } else {
+        setSuccess('Image generated successfully with DALL-E 3!');
+      }
+      
+      setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
       setError(err.response?.data?.detail || 'Failed to generate image');
     } finally {
