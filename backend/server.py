@@ -24,6 +24,49 @@ load_dotenv()
 # Initialize FastAPI app
 app = FastAPI(title="Pinspire API")
 
+# Simple rate limiting - track requests per IP
+from collections import defaultdict, deque
+import time
+
+request_tracker = defaultdict(lambda: deque(maxlen=100))  # Track last 100 requests per IP
+RATE_LIMIT_WINDOW = 60  # seconds
+MAX_REQUESTS_PER_WINDOW = 100  # requests
+
+async def rate_limit_check(request):
+    """Simple rate limiting middleware"""
+    client_ip = request.client.host
+    current_time = time.time()
+    
+    # Clean old requests outside the window
+    while request_tracker[client_ip] and request_tracker[client_ip][0] < current_time - RATE_LIMIT_WINDOW:
+        request_tracker[client_ip].popleft()
+    
+    # Check if limit exceeded
+    if len(request_tracker[client_ip]) >= MAX_REQUESTS_PER_WINDOW:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limit exceeded. Maximum {MAX_REQUESTS_PER_WINDOW} requests per {RATE_LIMIT_WINDOW} seconds."
+        )
+    
+    # Add current request
+    request_tracker[client_ip].append(current_time)
+
+# Add rate limiting middleware
+@app.middleware("http")
+async def rate_limiting_middleware(request, call_next):
+    """Apply rate limiting to all requests"""
+    try:
+        await rate_limit_check(request)
+    except HTTPException as e:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            status_code=e.status_code,
+            content={"detail": e.detail}
+        )
+    
+    response = await call_next(request)
+    return response
+
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
