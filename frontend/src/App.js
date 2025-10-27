@@ -107,6 +107,16 @@ function App() {
             }
           />
           <Route
+            path="/settings"
+            element={
+              isAuthenticated ? (
+                <Settings user={user} onUserUpdate={handleUserUpdate} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
             path="/"
             element={
               isAuthenticated ? (
