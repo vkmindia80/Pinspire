@@ -24,6 +24,11 @@ function PostCreator() {
   });
 
   const [imagePrompt, setImagePrompt] = useState('');
+  const [imageSettings, setImageSettings] = useState({
+    size: '1024x1024',
+    quality: 'standard',
+    style: 'vivid'
+  });
   const [loading, setLoading] = useState(false);
   const [generatingCaption, setGeneratingCaption] = useState(false);
   const [generatingImage, setGeneratingImage] = useState(false);
