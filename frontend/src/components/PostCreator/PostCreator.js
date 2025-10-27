@@ -93,15 +93,20 @@ function PostCreator() {
 
   const handleTopicChange = useCallback((e) => {
     const topic = e.target.value;
-    setAiSettings(prev => ({ ...prev, topic }));
     
     // Auto-generate image prompt based on topic
     if (topic.trim()) {
       // Create a concise image prompt from the topic
       const imagePromptText = `A high-quality, visually appealing image for Pinterest about: ${topic}. Professional photography style, vibrant colors, engaging composition.`;
       setImagePrompt(imagePromptText);
+      
+      // Auto-generate keywords from topic
+      const words = topic.toLowerCase().split(/\s+/).filter(word => word.length > 3);
+      const topicKeywords = words.slice(0, 5).join(', ');
+      setAiSettings(prev => ({ ...prev, topic, keywords: topicKeywords }));
     } else {
       setImagePrompt('');
+      setAiSettings(prev => ({ ...prev, topic: '', keywords: '' }));
     }
   }, []);
 
