@@ -144,6 +144,19 @@ class PinterestCallbackRequest(BaseModel):
     code: str
     state: str
 
+class UpdateProfileRequest(BaseModel):
+    username: str
+    email: str
+
+class UpdatePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+class PinterestCredentialsRequest(BaseModel):
+    app_id: str
+    app_secret: str
+    redirect_uri: str
+
 # Helper Functions
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
