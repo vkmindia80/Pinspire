@@ -612,19 +612,128 @@ function PostCreator() {
 
           {/* Caption Editor */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Caption</h2>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
-              rows="6"
-              placeholder="Write or generate your caption..."
-              value={formData.caption}
-              onChange={handleCaptionChange}
-              data-testid="caption-editor"
-            />
-            <p className="text-xs text-gray-500 mt-2">
-              {formData.caption.length} / 500 characters
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Content Fields</h2>
+            
+            {/* Title */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Title {formData.title && <span className="text-xs text-green-600">✨ AI Generated</span>}
+              </label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
+                placeholder="Catchy title..."
+                value={formData.title}
+                onChange={handleTitleChange}
+                maxLength={50}
+                data-testid="title-input"
+              />
+              <p className="text-xs text-gray-500 mt-1">{formData.title.length} / 50 characters</p>
+            </div>
+
+            {/* Caption */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Caption (Short Hook) {formData.caption && <span className="text-xs text-green-600">✨ AI Generated</span>}
+              </label>
+              <textarea
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
+                rows="3"
+                placeholder="Short engaging hook..."
+                value={formData.caption}
+                onChange={handleCaptionChange}
+                maxLength={150}
+                data-testid="caption-editor"
+              />
+              <p className="text-xs text-gray-500 mt-1">{formData.caption.length} / 150 characters</p>
+            </div>
+
+            {/* Description */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description (Detailed) {formData.description && <span className="text-xs text-green-600">✨ AI Generated</span>}
+              </label>
+              <textarea
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
+                rows="5"
+                placeholder="Detailed description with value..."
+                value={formData.description}
+                onChange={handleDescriptionChange}
+                maxLength={500}
+                data-testid="description-editor"
+              />
+              <p className="text-xs text-gray-500 mt-1">{formData.description.length} / 500 characters</p>
+            </div>
+
+            {/* Link URL */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Destination Link (Optional)
+              </label>
+              <input
+                type="url"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
+                placeholder="https://your-website.com"
+                value={formData.link_url}
+                onChange={handleLinkUrlChange}
+                data-testid="link-url-input"
+              />
+              <p className="text-xs text-gray-500 mt-1">Where users go when they click your pin</p>
+            </div>
           </div>
+
+          {/* Suggested Boards */}
+          {formData.suggested_boards && formData.suggested_boards.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                📌 Suggested Pinterest Boards
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {formData.suggested_boards.map((board, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1.5 bg-pinterest-red/10 text-pinterest-red rounded-full text-sm font-medium"
+                    data-testid={`suggested-board-${index}`}
+                  >
+                    {board}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-3">
+                💡 These are suggested board names where your content would fit well
+              </p>
+            </div>
+          )}
+
+          {/* Tagged Topics */}
+          {formData.tagged_topics && formData.tagged_topics.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+                🏷️ Tagged Topics
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {formData.tagged_topics.map((topic, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium flex items-center gap-2"
+                    data-testid={`tagged-topic-${index}`}
+                  >
+                    {topic}
+                    <button
+                      onClick={() => handleRemoveTopic(topic)}
+                      className="hover:text-red-600 transition"
+                      aria-label="Remove topic"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-3">
+                ✨ AI-generated topics. Click × to remove any topic.
+              </p>
+            </div>
+          )}
 
           {/* Scheduling */}
           <div className="bg-white rounded-lg shadow-sm p-6">
