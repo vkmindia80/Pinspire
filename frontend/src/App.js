@@ -5,6 +5,7 @@ import Signup from './components/Auth/Signup';
 import Dashboard from './components/Dashboard/Dashboard';
 import PostCreator from './components/PostCreator/PostCreator';
 import PinterestCallback from './components/Pinterest/PinterestCallback';
+import Settings from './components/Settings/Settings';
 import Navbar from './components/Common/Navbar';
 
 function App() {
