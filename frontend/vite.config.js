@@ -8,6 +8,18 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
   },
+  esbuild: {
+    loader: 'jsx',
+    include: /src\/.*\.jsx?$/,
+    exclude: []
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
   define: {
     'process.env': process.env
   }
