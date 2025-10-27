@@ -40,8 +40,8 @@ function Login({ onLogin }) {
 
   const handleDemoLogin = async () => {
     const demoCredentials = {
-      username: 'testuser',
-      password: 'test123',
+      username: 'demo',
+      password: 'demo123',
     };
     
     setFormData(demoCredentials);
