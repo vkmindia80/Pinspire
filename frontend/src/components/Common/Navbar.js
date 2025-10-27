@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pin, Plus, LayoutDashboard, LogOut } from 'lucide-react';
+import { Pin, Plus, LayoutDashboard, Settings, LogOut } from 'lucide-react';
 
 function Navbar({ user, onLogout }) {
   const navigate = useNavigate();
