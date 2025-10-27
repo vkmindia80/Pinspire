@@ -325,8 +325,8 @@ bash /app/check_status.sh
 
 ## Health Check URLs
 
-- **Frontend:** https://codebase-cleaner.preview.emergentagent.com/
-- **Backend:** https://codebase-cleaner.preview.emergentagent.com/api/ (should return 404, means it's running)
+- **Frontend:** https://smooth-form-persist.preview.emergentagent.com/
+- **Backend:** https://smooth-form-persist.preview.emergentagent.com/api/ (should return 404, means it's running)
 - **API Docs:** http://localhost:8001/docs (local only)
 
 ---
