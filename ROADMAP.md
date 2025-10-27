@@ -81,7 +81,7 @@
 
 ## 🚧 PENDING PHASES
 
-### Phase 6: Automated Scheduling System ⏳ PLANNED
+### Phase 7: Automated Scheduling System ⏳ PLANNED
 **Goal:** Implement automated post publishing at scheduled times
 
 **Tasks:**
@@ -102,17 +102,16 @@
 
 ---
 
-### Phase 7: Analytics & Polish ⏳ PLANNED
-**Goal:** Add analytics and refine UI/UX
+### Phase 8: Analytics & Insights ⏳ PLANNED
+**Goal:** Add analytics and refine advanced features
 
 **Tasks:**
 1. Post performance tracking
 2. Engagement metrics dashboard
 3. Template library for captions and images
 4. Batch operations (bulk upload/schedule)
-5. UI/UX refinements
-6. Performance optimization
-7. Comprehensive testing
+5. Performance optimization
+6. Comprehensive testing
 
 **Deliverables:**
 - Analytics dashboard
