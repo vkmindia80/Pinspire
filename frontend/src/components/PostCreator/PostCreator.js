@@ -79,7 +79,7 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/api/ai/generate-caption', {
+      const response = await api.post('/ai/generate-caption', {
         topic: aiSettings.topic,
         tone: aiSettings.tone,
         keywords: aiSettings.keywords.split(',').map(k => k.trim()).filter(k => k),
