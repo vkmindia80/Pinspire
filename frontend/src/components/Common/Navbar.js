@@ -42,6 +42,15 @@ function Navbar({ user, onLogout }) {
               <span>Create Post</span>
             </Link>
 
+            <Link
+              to="/settings"
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+              data-testid="settings-link"
+            >
+              <Settings className="h-5 w-5 text-gray-600" />
+              <span className="text-gray-700">Settings</span>
+            </Link>
+
             <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
               <div className="text-sm">
                 <p className="font-medium text-gray-900" data-testid="user-username">{user?.username}</p>
