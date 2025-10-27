@@ -36,7 +36,7 @@ function PinterestCallback() {
 
     try {
       // Exchange code for tokens
-      const response = await api.post('/api/pinterest/callback', {
+      const response = await api.post('/pinterest/callback', {
         code,
         state
       });
