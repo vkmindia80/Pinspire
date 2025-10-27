@@ -32,7 +32,7 @@ fi
 # Check Preview Domain - Frontend
 echo ""
 echo "3️⃣  Preview Domain - Frontend"
-PREVIEW_FRONTEND=$(curl -s https://next-steps-dev-1.preview.emergentagent.com/ 2>&1 | grep -o "Pinspire")
+PREVIEW_FRONTEND=$(curl -s https://codebase-cleanup-12.preview.emergentagent.com/ 2>&1 | grep -o "Pinspire")
 if [ "$PREVIEW_FRONTEND" == "Pinspire" ]; then
     echo -e "   ${GREEN}✓ Accessible via preview domain${NC}"
 else
@@ -42,7 +42,7 @@ fi
 # Check Preview Domain - Backend API
 echo ""
 echo "4️⃣  Preview Domain - Backend API"
-PREVIEW_BACKEND=$(curl -s https://next-steps-dev-1.preview.emergentagent.com/api/auth/login \
+PREVIEW_BACKEND=$(curl -s https://codebase-cleanup-12.preview.emergentagent.com/api/auth/login \
   -X POST -H "Content-Type: application/json" \
   -d '{"username":"test","password":"test"}' 2>&1 | grep -o "detail")
 if [ "$PREVIEW_BACKEND" == "detail" ]; then
@@ -97,5 +97,5 @@ echo "View Backend Logs:"
 echo "  tail -f /var/log/supervisor/backend.out.log"
 echo ""
 echo "🌐 Access:"
-echo "  https://next-steps-dev-1.preview.emergentagent.com"
+echo "  https://codebase-cleanup-12.preview.emergentagent.com"
 echo ""
