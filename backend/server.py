@@ -220,17 +220,58 @@ async def generate_caption(request: CaptionRequest, current_user: dict = Depends
 @app.post("/api/ai/generate-image")
 async def generate_image(request: ImageGenerationRequest, current_user: dict = Depends(get_current_user)):
     try:
-        # Note: For DALL-E image generation, we'll use OpenAI's API directly
-        # The emergentintegrations library is primarily for chat
-        # We'll implement a placeholder that returns a mock response for now
-        # In production, you'll need to use OpenAI's images.generate endpoint
+        # Validate size parameter
+        valid_sizes = ["1024x1024", "1792x1024", "1024x1792"]
+        if request.size not in valid_sizes:
+            raise HTTPException(status_code=400, detail=f"Invalid size. Must be one of: {', '.join(valid_sizes)}")
         
-        return {
-            "image_url": f"https://via.placeholder.com/800x600?text=AI+Generated+Image",
-            "prompt": request.prompt,
-            "success": True,
-            "note": "Image generation will be implemented with OpenAI DALL-E API"
-        }
+        # Validate quality parameter
+        valid_qualities = ["standard", "hd"]
+        if request.quality not in valid_qualities:
+            raise HTTPException(status_code=400, detail=f"Invalid quality. Must be one of: {', '.join(valid_qualities)}")
+        
+        # Validate style parameter
+        valid_styles = ["natural", "vivid"]
+        if request.style not in valid_styles:
+            raise HTTPException(status_code=400, detail=f"Invalid style. Must be one of: {', '.join(valid_styles)}")
+        
+        # Use OpenAI's DALL-E 3 API with Emergent LLM Key
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            response = await client.post(
+                "https://api.openai.com/v1/images/generations",
+                headers={
+                    "Authorization": f"Bearer {EMERGENT_LLM_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "dall-e-3",
+                    "prompt": request.prompt,
+                    "n": 1,
+                    "size": request.size,
+                    "quality": request.quality,
+                    "style": request.style
+                }
+            )
+            
+            if response.status_code != 200:
+                error_detail = response.json().get("error", {}).get("message", "Unknown error")
+                raise HTTPException(status_code=500, detail=f"DALL-E 3 API error: {error_detail}")
+            
+            result = response.json()
+            image_url = result["data"][0]["url"]
+            revised_prompt = result["data"][0].get("revised_prompt", request.prompt)
+            
+            return {
+                "image_url": image_url,
+                "prompt": request.prompt,
+                "revised_prompt": revised_prompt,
+                "size": request.size,
+                "quality": request.quality,
+                "style": request.style,
+                "success": True
+            }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating image: {str(e)}")
 
