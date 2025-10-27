@@ -225,7 +225,7 @@ function PostCreator() {
       // First save the post if it's new
       let postId = editId;
       if (!editId) {
-        const saveResponse = await api.post('/api/posts', {
+        const saveResponse = await api.post('/posts', {
           ...formData,
           ai_generated_caption: !!aiSettings.topic,
           ai_generated_image: !!imagePrompt,
@@ -234,7 +234,7 @@ function PostCreator() {
       }
 
       // Then post to Pinterest
-      const response = await api.post(`/api/pinterest/post/${postId}`, {
+      const response = await api.post(`/pinterest/post/${postId}`, {
         board_ids: selectedBoards
       });
 
