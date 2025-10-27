@@ -14,13 +14,17 @@ export default defineConfig({
     ],
     hmr: {
       clientPort: 443,
-      overlay: true
+      overlay: true,
+      // Prevent aggressive HMR that causes flickering
+      protocol: 'wss'
     },
     proxy: {
       '/api': {
         target: 'http://localhost:8001',
         changeOrigin: true,
-        secure: false
+        secure: false,
+        // Prevent proxy from causing issues
+        ws: true
       }
     }
   },
@@ -38,5 +42,13 @@ export default defineConfig({
   },
   define: {
     'process.env': process.env
+  },
+  // Prevent aggressive rebuilds
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 })
