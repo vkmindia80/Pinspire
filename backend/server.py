@@ -237,41 +237,33 @@ async def generate_image(request: ImageGenerationRequest, current_user: dict = D
         if request.style not in valid_styles:
             raise HTTPException(status_code=400, detail=f"Invalid style. Must be one of: {', '.join(valid_styles)}")
         
-        # Use OpenAI's DALL-E 3 API with Emergent LLM Key
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(
-                "https://api.openai.com/v1/images/generations",
-                headers={
-                    "Authorization": f"Bearer {EMERGENT_LLM_KEY}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "model": "dall-e-3",
-                    "prompt": request.prompt,
-                    "n": 1,
-                    "size": request.size,
-                    "quality": request.quality,
-                    "style": request.style
-                }
-            )
-            
-            if response.status_code != 200:
-                error_detail = response.json().get("error", {}).get("message", "Unknown error")
-                raise HTTPException(status_code=500, detail=f"DALL-E 3 API error: {error_detail}")
-            
-            result = response.json()
-            image_url = result["data"][0]["url"]
-            revised_prompt = result["data"][0].get("revised_prompt", request.prompt)
-            
-            return {
-                "image_url": image_url,
-                "prompt": request.prompt,
-                "revised_prompt": revised_prompt,
-                "size": request.size,
-                "quality": request.quality,
-                "style": request.style,
-                "success": True
-            }
+        # Initialize OpenAI Image Generation with Emergent LLM Key
+        image_gen = OpenAIImageGeneration(api_key=EMERGENT_LLM_KEY)
+        
+        # Generate image using gpt-image-1 (latest DALL-E model)
+        # Note: The emergentintegrations library uses gpt-image-1 as the latest model
+        images = await image_gen.generate_images(
+            prompt=request.prompt,
+            model="gpt-image-1",
+            number_of_images=1
+        )
+        
+        if not images or len(images) == 0:
+            raise HTTPException(status_code=500, detail="No image was generated")
+        
+        # Convert image bytes to base64
+        image_base64 = base64.b64encode(images[0]).decode('utf-8')
+        image_data_url = f"data:image/png;base64,{image_base64}"
+        
+        return {
+            "image_url": image_data_url,
+            "prompt": request.prompt,
+            "size": request.size,
+            "quality": request.quality,
+            "style": request.style,
+            "success": True,
+            "note": "Image generated with DALL-E (gpt-image-1) via Emergent LLM Key"
+        }
     except HTTPException:
         raise
     except Exception as e:
