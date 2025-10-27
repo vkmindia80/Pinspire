@@ -156,6 +156,22 @@ function PostCreator() {
     setImageSettings(prev => ({ ...prev, style: e.target.value }));
   }, []);
 
+  const handleRemoveTopic = useCallback((topicToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      tagged_topics: prev.tagged_topics.filter(topic => topic !== topicToRemove)
+    }));
+  }, []);
+
+  const handleAddTopic = useCallback((newTopic) => {
+    if (newTopic && !formData.tagged_topics.includes(newTopic)) {
+      setFormData(prev => ({
+        ...prev,
+        tagged_topics: [...prev.tagged_topics, newTopic]
+      }));
+    }
+  }, [formData.tagged_topics]);
+
   const handleGenerateCaption = async () => {
     if (!aiSettings.topic.trim()) {
       setError('Please enter a topic for caption generation');
