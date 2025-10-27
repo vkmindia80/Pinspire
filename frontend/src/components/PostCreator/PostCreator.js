@@ -155,7 +155,7 @@ function PostCreator() {
     setError('');
 
     try {
-      const response = await api.post('/api/ai/generate-image', {
+      const response = await api.post('/ai/generate-image', {
         prompt: imagePrompt,
         size: imageSettings.size,
         quality: imageSettings.quality,
