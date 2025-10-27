@@ -12,8 +12,10 @@ import os
 import uuid
 import asyncio
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
 from pinterest_service import pinterest_service
 import httpx
+import base64
 
 # Load environment variables
 load_dotenv()
