@@ -7,6 +7,15 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
     strictPort: true,
+    allowedHosts: [
+      'pinpost-scheduler.preview.emergentagent.com',
+      '.preview.emergentagent.com',
+      'localhost'
+    ],
+    hmr: {
+      clientPort: 443,
+      host: 'pinpost-scheduler.preview.emergentagent.com'
+    }
   },
   esbuild: {
     loader: 'jsx',
