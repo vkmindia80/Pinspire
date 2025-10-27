@@ -70,10 +70,15 @@ function PostCreator() {
           const response = await api.get(`/posts/${editId}`);
           const post = response.data.post;
           setFormData({
+            title: post.title || '',
             caption: post.caption || '',
+            description: post.description || '',
+            link_url: post.link_url || '',
             image_url: post.image_url || '',
             scheduled_time: post.scheduled_time || '',
             boards: post.boards || [],
+            suggested_boards: post.suggested_boards || [],
+            tagged_topics: post.tagged_topics || [],
           });
         } catch (err) {
           setError('Failed to fetch post');
