@@ -1,132 +1,219 @@
-# Pinspire - AI Pinterest Post Creation & Scheduling Application
-## Comprehensive Development Roadmap
+# Pinspire - Development Roadmap
+## Comprehensive Development Status & Next Steps
 
 ---
 
 ## 🎯 Project Overview
 
-**Pinspire** is an AI-powered application that enables users to create compelling Pinterest posts with AI-generated captions and images, and schedule them for optimal posting times.
+**Pinspire** is an AI-powered Pinterest post creation & scheduling application that helps users create compelling Pinterest content with AI-generated captions and images, then schedule and post them to Pinterest.
 
 ### Tech Stack
-- **Backend:** FastAPI (Python)
-- **Frontend:** React + Tailwind CSS
-- **Database:** MongoDB
+- **Backend:** FastAPI (Python) + MongoDB
+- **Frontend:** React + Vite + Tailwind CSS
 - **AI Services:** OpenAI (GPT-4o + DALL-E 3) via Emergent LLM Key
-- **API Integration:** Pinterest API v5
+- **API Integration:** Pinterest API v5 (Mock mode ready)
 - **Authentication:** JWT-based
-- **Scheduling:** APScheduler
+- **Process Management:** Supervisor
 
 ---
 
-## 📋 Core Features
+## 📊 Current Status Summary
 
-### Priority Features (Phase 1-3) - COMPLETED ✅
-1. ✅ **AI Caption Generation**
-   - Smart, engaging captions using GPT-4o
-   - Tone customization (professional, casual, enthusiastic)
+### ✅ COMPLETED PHASES
+
+**Phase 1: Foundation** ✅ COMPLETE
+- JWT authentication system
+- MongoDB integration
+- Basic project structure
+- Protected routes
+- Login & Signup pages
+
+**Phase 2: AI Caption Generation** ✅ COMPLETE
+- OpenAI GPT-4o integration via Emergent LLM Key
+- AI caption generation with tone customization
+- Hashtag suggestions
+- Multiple tone options (engaging, professional, casual, etc.)
+
+**Phase 3: Pinterest Integration** ✅ COMPLETE
+- Pinterest OAuth flow (Mock mode active)
+- Board fetching and management
+- Multi-board posting
+- Connection UI in Dashboard
+- pinterest_service.py with mock/real mode support
+
+**Phase 4: AI Image Generation (DALL-E 3)** ✅ COMPLETE
+- Real DALL-E 3 integration via gpt-image-1 model
+- Multiple size options (1024x1024, 1792x1024, 1024x1792)
+- Quality settings (Standard, HD)
+- Style options (Natural, Vivid)
+- Base64 image encoding for instant display
+
+**Phase 5: Post Creation & Management** ✅ COMPLETE
+- Complete post creation workflow
+- Post management dashboard
+- Draft system
+- Edit and delete functionality
+- Post filtering by status
+- Real-time post preview
+
+**Recent Fix (Jan 27, 2025):** ✅ RESOLVED
+- **Issue:** Text input not working in "Create new post" page
+- **Root Cause:** Missing Vite proxy configuration for /api routes
+- **Solution:** Added proxy configuration in vite.config.js to route /api requests to backend at port 8001
+- **Status:** All text inputs now working perfectly
+
+---
+
+## 🚧 PENDING PHASES
+
+### Phase 6: Automated Scheduling System ⏳ PLANNED
+**Goal:** Implement automated post publishing at scheduled times
+
+**Tasks:**
+1. Setup APScheduler for background jobs
+2. Create scheduling service
+3. Implement automated post publishing
+4. Add retry logic for failed posts
+5. Implement timezone handling
+6. Add scheduling management UI
+
+**Deliverables:**
+- Automated post publishing at scheduled times
+- Background job system
+- Retry mechanism for failures
+- Email notifications (optional)
+
+**Estimated Timeline:** 2-3 days
+
+---
+
+### Phase 7: Analytics & Polish ⏳ PLANNED
+**Goal:** Add analytics and refine UI/UX
+
+**Tasks:**
+1. Post performance tracking
+2. Engagement metrics dashboard
+3. Template library for captions and images
+4. Batch operations (bulk upload/schedule)
+5. UI/UX refinements
+6. Performance optimization
+7. Comprehensive testing
+
+**Deliverables:**
+- Analytics dashboard
+- Template system
+- Batch operations
+- Polished, production-ready application
+
+**Estimated Timeline:** 3-4 days
+
+---
+
+## 🔑 Features Overview
+
+### ✅ Core Features (Implemented)
+
+1. **User Authentication**
+   - Secure signup/login with JWT tokens
+   - Password hashing with bcrypt
+   - Protected API endpoints
+   - Session management
+
+2. **AI Caption Generation (GPT-4o)**
+   - Topic-based caption creation
+   - 5 tone options (engaging, professional, casual, enthusiastic, informative)
+   - Keyword integration
+   - Pinterest-optimized output
    - Hashtag suggestions
-   - Character limit optimization
 
-2. 🚧 **AI Image Generation** - IN PROGRESS (Phase 4)
-   - DALL-E 3 powered image creation
-   - Custom prompts or AI-suggested prompts
-   - Multiple style options
-   - High-quality image generation
+3. **AI Image Generation (DALL-E 3)**
+   - Real-time image generation
+   - Multiple sizes (Square, Landscape, Portrait)
+   - Quality control (Standard, HD)
+   - Style customization (Vivid, Natural)
+   - Base64 encoding for instant display
 
-3. ✅ **Post Scheduling**
-   - Calendar-based scheduling interface
-   - Post creation with scheduled times
-   - Draft system
+4. **Post Management**
+   - Create, edit, delete posts
+   - Save as draft or schedule
+   - Real-time preview
+   - Status filtering
+   - AI-generated content tracking
+
+5. **Pinterest Integration (Mock Mode)**
+   - OAuth flow ready
+   - Board fetching
+   - Multi-board posting
+   - Connection management
+   - Ready to switch to real Pinterest API
+
+6. **Modern UI/UX**
+   - Responsive design (mobile-first)
+   - Pinterest-inspired color scheme
+   - Loading states and animations
+   - Error handling with user feedback
+   - Intuitive navigation
+
+### ⏳ Planned Features
+
+7. **Automated Scheduling**
+   - Background job system (APScheduler)
+   - Auto-publishing at scheduled times
+   - Retry logic for failures
    - Timezone support
 
-4. ✅ **Multi-Board Posting**
-   - Fetch user's Pinterest boards (Mock mode)
-   - Post to multiple boards simultaneously
-   - Board management
-   - Pinterest OAuth integration
-
-### Additional Features (Phase 3)
-5. **Analytics Dashboard**
+8. **Analytics Dashboard**
    - Post performance tracking
    - Engagement metrics
    - Best time to post insights
+   - A/B testing for captions
 
-6. **Template Library**
+9. **Template Library**
    - Pre-built caption templates
    - Image prompt templates
    - Industry-specific templates
+   - User-created templates
 
-7. **Batch Operations**
-   - Bulk upload images
-   - AI caption generation for multiple posts
-   - Batch scheduling
+10. **Batch Operations**
+    - Bulk image upload
+    - Batch AI caption generation
+    - Bulk scheduling
+    - CSV import/export
 
 ---
 
-## 🏗️ Application Architecture
+## 📁 Application Architecture
 
 ### Backend Structure
 ```
 backend/
-├── server.py                 # Main FastAPI application
+├── server.py                 # Main FastAPI application with all endpoints
+├── pinterest_service.py      # Pinterest API integration (mock/real mode)
 ├── requirements.txt          # Python dependencies
-├── .env                      # Environment variables
-├── models/
-│   ├── user.py              # User data models
-│   ├── post.py              # Post data models
-│   └── template.py          # Template models
-├── routes/
-│   ├── auth.py              # Authentication endpoints
-│   ├── posts.py             # Post management endpoints
-│   ├── ai.py                # AI generation endpoints
-│   └── pinterest.py         # Pinterest API endpoints
-├── services/
-│   ├── ai_service.py        # OpenAI integration
-│   ├── pinterest_service.py # Pinterest API integration
-│   ├── scheduler_service.py # Post scheduling logic
-│   └── auth_service.py      # JWT authentication
-└── utils/
-    ├── database.py          # MongoDB connection
-    └── helpers.py           # Utility functions
+└── .env                      # Environment variables
 ```
 
 ### Frontend Structure
 ```
 frontend/
+├── src/
+│   ├── App.js               # Main component with routing
+│   ├── components/
+│   │   ├── Auth/            # Login & Signup
+│   │   ├── Dashboard/       # Post management
+│   │   ├── PostCreator/     # AI post creation
+│   │   ├── Pinterest/       # Pinterest integration UI
+│   │   └── Common/          # Shared components
+│   └── services/
+│       └── api.js           # Axios API client
 ├── package.json
-├── tailwind.config.js
-├── .env
-├── public/
-└── src/
-    ├── App.js               # Main component with routing
-    ├── index.js             # Entry point
-    ├── components/
-    │   ├── Auth/
-    │   │   ├── Login.js
-    │   │   └── Signup.js
-    │   ├── Dashboard/
-    │   │   ├── Dashboard.js
-    │   │   └── PostCard.js
-    │   ├── PostCreator/
-    │   │   ├── PostCreator.js
-    │   │   ├── CaptionGenerator.js
-    │   │   ├── ImageGenerator.js
-    │   │   └── PostPreview.js
-    │   ├── Scheduler/
-    │   │   ├── Calendar.js
-    │   │   └── ScheduleModal.js
-    │   └── Common/
-    │       ├── Navbar.js
-    │       └── Loader.js
-    ├── services/
-    │   └── api.js           # API client
-    └── utils/
-        └── auth.js          # Auth helpers
+├── vite.config.js           # Vite configuration with proxy
+└── .env                     # Frontend environment variables
 ```
 
 ### Database Schema
 
-#### Users Collection
+**Users Collection:**
 ```javascript
 {
   _id: UUID,
@@ -134,43 +221,31 @@ frontend/
   email: String,
   password_hash: String,
   pinterest_connected: Boolean,
-  pinterest_access_token: String (encrypted),
-  pinterest_refresh_token: String (encrypted),
+  pinterest_access_token: String,
+  pinterest_refresh_token: String,
+  pinterest_username: String,
   created_at: DateTime,
   updated_at: DateTime
 }
 ```
 
-#### Posts Collection
+**Posts Collection:**
 ```javascript
 {
   _id: UUID,
   user_id: UUID,
   caption: String,
   image_url: String,
-  image_data: String (base64 or URL),
+  image_data: String,
+  boards: [String],
+  scheduled_time: DateTime,
+  status: 'draft' | 'scheduled' | 'published',
   ai_generated_caption: Boolean,
   ai_generated_image: Boolean,
-  boards: [String], // Pinterest board IDs
-  scheduled_time: DateTime,
-  status: String, // 'draft', 'scheduled', 'published', 'failed'
   pinterest_post_id: String,
   created_at: DateTime,
   published_at: DateTime,
   metadata: Object
-}
-```
-
-#### Templates Collection
-```javascript
-{
-  _id: UUID,
-  name: String,
-  category: String,
-  caption_template: String,
-  image_prompt_template: String,
-  tags: [String],
-  created_at: DateTime
 }
 ```
 
@@ -186,7 +261,6 @@ frontend/
 ### AI Generation
 - `POST /api/ai/generate-caption` - Generate caption using GPT-4o
 - `POST /api/ai/generate-image` - Generate image using DALL-E 3
-- `POST /api/ai/enhance-caption` - Enhance existing caption
 - `POST /api/ai/suggest-hashtags` - Get hashtag suggestions
 
 ### Posts
@@ -195,220 +269,134 @@ frontend/
 - `GET /api/posts/{id}` - Get post by ID
 - `PUT /api/posts/{id}` - Update post
 - `DELETE /api/posts/{id}` - Delete post
-- `POST /api/posts/{id}/schedule` - Schedule post
-- `POST /api/posts/{id}/publish` - Publish immediately
 
 ### Pinterest Integration
+- `GET /api/pinterest/mode` - Check if mock or real mode
 - `GET /api/pinterest/connect` - Initiate Pinterest OAuth
-- `GET /api/pinterest/callback` - OAuth callback
+- `POST /api/pinterest/callback` - OAuth callback
+- `POST /api/pinterest/disconnect` - Disconnect Pinterest
 - `GET /api/pinterest/boards` - Get user boards
-- `POST /api/pinterest/post` - Post to Pinterest
+- `POST /api/pinterest/post/{id}` - Post to Pinterest
 
 ---
 
-## 🚀 Implementation Phases
+## 🎯 Next Steps & Priorities
 
-### Phase 1: Foundation - ✅ COMPLETED
-**Goal:** Setup project structure and basic authentication
+### Immediate Next Steps (Recommended)
 
-**Deliverables:**
-- ✅ Working JWT authentication system
-- ✅ Basic project structure
-- ✅ MongoDB database connectivity
-- ✅ Login and signup pages
-- ✅ Protected routes
+**Option 1: Switch to Real Pinterest (Production Ready)**
+1. Obtain Pinterest Developer credentials
+2. Update .env with real credentials
+3. Test OAuth flow
+4. Enable real posting
 
----
+**Option 2: Implement Automated Scheduling (Phase 6)**
+1. Install APScheduler
+2. Create background job system
+3. Implement scheduled publishing
+4. Add retry logic
+5. Test with scheduled posts
 
-### Phase 2: AI Integration (Caption) - ✅ COMPLETED
-**Goal:** Integrate OpenAI for caption generation
+**Option 3: Add Analytics (Phase 7)**
+1. Track post performance
+2. Create analytics dashboard
+3. Add engagement metrics
+4. Implement insights
 
-**Deliverables:**
-- ✅ OpenAI GPT-4o integration via Emergent LLM Key
-- ✅ Working AI caption generation
-- ✅ Hashtag suggestions
-- ✅ Multiple tone options
-- ✅ User-friendly generation interface
+### Long-term Enhancements
 
----
+1. **Multi-Platform Support**
+   - Instagram integration
+   - Facebook integration
+   - Twitter/X integration
 
-### Phase 3: Pinterest Integration - ✅ COMPLETED
-**Goal:** Connect with Pinterest API
+2. **Team Collaboration**
+   - Multi-user accounts
+   - Content approval workflow
+   - Role-based permissions
 
-**Deliverables:**
-- ✅ Pinterest OAuth flow (Mock mode)
-- ✅ Board fetching
-- ✅ Multi-board posting
-- ✅ Connection UI
-- ✅ Pinterest service with mock/real mode support
+3. **Advanced AI Features**
+   - Trend analysis
+   - Optimal posting time predictions
+   - Content recommendations
+   - Image style transfer
 
----
-
-### Phase 4: AI Image Generation (DALL-E 3) - 🚧 IN PROGRESS
-**Goal:** Implement real DALL-E 3 image generation
-
-**Current Status:** Backend placeholder exists, implementing real API integration
-
-**Tasks:**
-1. 🚧 Implement DALL-E 3 API integration with OpenAI
-2. 🚧 Add image size options (1024x1024, 1792x1024, 1024x1792)
-3. 🚧 Add quality settings (standard, HD)
-4. 🚧 Add style options (natural, vivid)
-5. ⏳ Update frontend for enhanced controls
-6. ⏳ Test with various prompts
-7. ⏳ Error handling and validation
-
-**Deliverables:**
-- Real DALL-E 3 image generation
-- Multiple size and quality options
-- Style customization
-- Production-ready integration
+4. **Content Library**
+   - Stock image integration
+   - Brand asset management
+   - Content calendar view
+   - Reusable content snippets
 
 ---
 
-### Phase 5: Post Creation & Management - ✅ COMPLETED
-**Goal:** Complete post creation workflow
+## 🔐 Configuration
 
-**Deliverables:**
-- ✅ Complete post creation flow
-- ✅ Post management dashboard
-- ✅ Draft system
-- ✅ Edit and delete functionality
-- ✅ Post filtering
+### Backend Environment Variables (.env)
+```bash
+MONGO_URL=mongodb://localhost:27017/pinspire
+JWT_SECRET=your-secret-key-change-in-production
+JWT_ALGORITHM=HS256
+EMERGENT_LLM_KEY=sk-emergent-XXXXXXXXXXXX
+PINTEREST_APP_ID=MOCK_1234567890  # Change for real Pinterest
+PINTEREST_APP_SECRET=MOCK_secret   # Change for real Pinterest
+PINTEREST_REDIRECT_URI=http://localhost:3000/pinterest/callback
+```
 
----
-
-### Phase 6: Automated Scheduling System - ⏳ PLANNED
-**Goal:** Implement automated post publishing
-
-**Tasks:**
-1. Setup APScheduler for background jobs
-2. Create scheduling service
-3. Implement automated post publishing at scheduled times
-4. Add retry logic for failed posts
-5. Implement timezone handling
-6. Add scheduling management
-
-**Deliverables:**
-- Automated post publishing
-- Background job system
-- Retry mechanism
-
----
-
-### Phase 7: Polish & Advanced Features - ⏳ PLANNED
-**Goal:** Refine UI/UX and add advanced features
-
-**Tasks:**
-1. UI/UX improvements
-2. Analytics dashboard
-3. Template library
-4. Batch operations
-5. Performance optimization
-6. Comprehensive testing
-
-**Deliverables:**
-- Polished user interface
-- Analytics and insights
-- Template system
-- Tested and stable application
-
----
-
-## 🔑 Required Credentials & Setup
-
-### 1. Emergent LLM Key
-- Already available in the platform
-- Will be retrieved programmatically
-- Used for OpenAI GPT-4o and DALL-E 3
-
-### 2. Pinterest API Credentials
-**See PINTEREST_API_SETUP.md for detailed guide**
-
----
-
-## 🎨 UI/UX Design Principles
-
-1. **Clean & Modern:** Minimalist design with Tailwind CSS
-2. **Intuitive Flow:** Guided post creation process
-3. **Responsive:** Mobile-first design approach
-4. **Visual Feedback:** Loading states, success/error messages
-5. **Accessibility:** ARIA labels, keyboard navigation
-6. **Color Scheme:** Pinterest-inspired (reds, whites, clean)
+### Frontend Environment Variables (.env)
+```bash
+REACT_APP_BACKEND_URL=http://localhost:8001
+```
 
 ---
 
 ## 📊 Success Metrics
 
 ### Completed ✅
-1. **User can create account and login** ✅
-2. **AI generates relevant captions** ✅
-3. **Posts can be created and managed** ✅
-4. **Post scheduling system in place** ✅
-5. **Pinterest integration (Mock mode)** ✅
-6. **Multi-board posting works** ✅
-7. **App is responsive and fast** ✅
-
-### In Progress 🚧
-8. **AI generates high-quality images (DALL-E 3)** 🚧 - Phase 4
+1. Users can create accounts and login securely
+2. AI generates relevant, engaging captions
+3. AI generates high-quality images with DALL-E 3
+4. Posts can be created, edited, and managed
+5. Post scheduling system in place
+6. Pinterest integration (Mock mode) functional
+7. Multi-board posting works
+8. App is responsive and fast
+9. All text inputs working correctly
 
 ### Planned ⏳
-9. **Scheduled posts publish automatically** ⏳ - Phase 6
-10. **Analytics and insights** ⏳ - Phase 7
-
----
-
-## 🔮 Future Enhancements
-
-1. **Analytics Integration**
-   - Track post performance
-   - Engagement metrics
-   - A/B testing for captions
-
-2. **Advanced AI Features**
-   - Image style transfer
-   - Trend analysis
-   - Optimal posting time predictions
-
-3. **Collaboration**
-   - Team accounts
-   - Content approval workflow
-   - Shared template library
-
-4. **Multi-Platform**
-   - Instagram integration
-   - Facebook integration
-   - Cross-platform scheduling
-
-5. **Content Library**
-   - Stock image integration
-   - Brand asset management
-   - Content calendar
+10. Scheduled posts publish automatically (Phase 6)
+11. Analytics and insights available (Phase 7)
+12. Real Pinterest posting enabled (when credentials added)
 
 ---
 
 ## 🛠️ Development Guidelines
 
-1. **Code Quality:** Clean, documented code
-2. **Error Handling:** Comprehensive try-catch blocks
-3. **Security:** Encrypted credentials, secure JWT
-4. **Performance:** Lazy loading, code splitting
-5. **Testing:** Test critical flows
-6. **Git:** Meaningful commit messages
+1. **Code Quality:** Clean, documented code with proper error handling
+2. **Security:** Encrypted credentials, secure JWT, HTTPS in production
+3. **Performance:** Lazy loading, code splitting, optimized queries
+4. **Testing:** Test critical flows before deployment
+5. **Documentation:** Keep docs updated with changes
 
 ---
 
-## 📝 Notes
+## 📝 Recent Updates
 
-- All backend routes must be prefixed with `/api`
-- Use environment variables for all credentials
-- Never hardcode URLs or API keys
-- Follow the existing project structure
-- Use data-testid attributes for testing
+**January 27, 2025:**
+- ✅ Fixed text input issue in Create Post page
+- ✅ Added Vite proxy configuration for /api routes
+- ✅ Verified all text inputs working (caption, topic, image prompt)
+- ✅ Cleaned up codebase documentation
+- ✅ Updated ROADMAP with current status
+- ✅ Created demo user account (username: demo, password: demo123)
 
 ---
 
-**Last Updated:** January 2025
-**Version:** 1.1
-**Current Phase:** Phase 4 - DALL-E 3 Image Generation (IN PROGRESS) 🚧
-**Status:** Active Development 🚀
+**Current Version:** 1.2
+**Last Updated:** January 27, 2025
+**Current Phase:** Phase 5 Complete - Ready for Phase 6 🚀
+**Status:** Fully Functional MVP with AI Integration
+
+---
+
+**Built with ❤️ using FastAPI, React, MongoDB, and OpenAI**
+*Pinspire - Making Pinterest Marketing Effortless*
