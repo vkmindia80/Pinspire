@@ -107,18 +107,19 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 - [x] User authentication (signup/login)
 - [x] JWT-based security
 - [x] AI caption generation (GPT-4o)
-- [x] AI image generation (placeholder - DALL-E integration ready)
+- [x] **AI image generation (DALL-E via gpt-image-1)** 🆕
 - [x] Post creation and management
 - [x] Post scheduling
 - [x] Dashboard with filtering
 - [x] Responsive UI design
 - [x] MongoDB integration
+- [x] Pinterest integration (Mock mode)
+- [x] Multi-board posting
 
 ### 🚧 Pending Integration
-- [ ] Pinterest OAuth flow (requires Pinterest App credentials)
-- [ ] Pinterest board fetching
-- [ ] Actual posting to Pinterest
-- [ ] DALL-E 3 image generation (requires OpenAI API integration)
+- [ ] Pinterest OAuth flow (requires real Pinterest App credentials)
+- [ ] Pinterest board fetching (real API)
+- [ ] Actual posting to Pinterest (real API)
 - [ ] Automated scheduled post publishing (APScheduler)
 
 ---
