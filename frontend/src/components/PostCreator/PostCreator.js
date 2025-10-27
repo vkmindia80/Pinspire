@@ -353,6 +353,7 @@ function PostCreator() {
             <div className="flex items-center space-x-2 mb-4">
               <ImageIcon className="h-5 w-5 text-blue-600" />
               <h2 className="text-xl font-semibold text-gray-900">AI Image Generator</h2>
+              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">DALL-E 3</span>
             </div>
 
             <div className="space-y-4">
@@ -370,6 +371,48 @@ function PostCreator() {
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Size</label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red text-sm"
+                    value={imageSettings.size}
+                    onChange={(e) => setImageSettings({ ...imageSettings, size: e.target.value })}
+                    data-testid="image-size-select"
+                  >
+                    <option value="1024x1024">Square (1024x1024)</option>
+                    <option value="1792x1024">Landscape (1792x1024)</option>
+                    <option value="1024x1792">Portrait (1024x1792)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Quality</label>
+                  <select
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red text-sm"
+                    value={imageSettings.quality}
+                    onChange={(e) => setImageSettings({ ...imageSettings, quality: e.target.value })}
+                    data-testid="image-quality-select"
+                  >
+                    <option value="standard">Standard</option>
+                    <option value="hd">HD (Higher Quality)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Style</label>
+                <select
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
+                  value={imageSettings.style}
+                  onChange={(e) => setImageSettings({ ...imageSettings, style: e.target.value })}
+                  data-testid="image-style-select"
+                >
+                  <option value="vivid">Vivid (More dramatic, colorful)</option>
+                  <option value="natural">Natural (More realistic, subtle)</option>
+                </select>
+              </div>
+
               <button
                 onClick={handleGenerateImage}
                 disabled={generatingImage || !imagePrompt.trim()}
@@ -379,12 +422,12 @@ function PostCreator() {
                 {generatingImage ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Generating...</span>
+                    <span>Generating with DALL-E 3...</span>
                   </>
                 ) : (
                   <>
                     <ImageIcon className="h-5 w-5" />
-                    <span>Generate Image</span>
+                    <span>Generate Image with AI</span>
                   </>
                 )}
               </button>
