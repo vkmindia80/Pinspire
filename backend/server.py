@@ -123,18 +123,28 @@ class ImageGenerationRequest(BaseModel):
     style: Optional[str] = "vivid"  # Options: natural, vivid
 
 class PostCreate(BaseModel):
+    title: Optional[str] = ""
     caption: str
+    description: Optional[str] = ""
+    link_url: Optional[str] = None
     image_url: Optional[str] = None
     image_data: Optional[str] = None
     boards: Optional[List[str]] = []
+    suggested_boards: Optional[List[str]] = []
+    tagged_topics: Optional[List[str]] = []
     scheduled_time: Optional[str] = None
     ai_generated_caption: bool = False
     ai_generated_image: bool = False
 
 class PostUpdate(BaseModel):
+    title: Optional[str] = None
     caption: Optional[str] = None
+    description: Optional[str] = None
+    link_url: Optional[str] = None
     image_url: Optional[str] = None
     boards: Optional[List[str]] = None
+    suggested_boards: Optional[List[str]] = []
+    tagged_topics: Optional[List[str]] = []
     scheduled_time: Optional[str] = None
 
 class PinterestPostRequest(BaseModel):
