@@ -62,7 +62,7 @@ function PostCreator() {
     if (editId) {
       const fetchPost = async () => {
         try {
-          const response = await api.get(`/api/posts/${editId}`);
+          const response = await api.get(`/posts/${editId}`);
           const post = response.data.post;
           setFormData({
             caption: post.caption || '',
