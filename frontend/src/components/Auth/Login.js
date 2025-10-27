@@ -69,6 +69,24 @@ function Login({ onLogin }) {
               </div>
             )}
 
+            {/* Demo Credentials Button */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Try Demo Account</p>
+                  <p className="text-xs text-blue-700 mt-1">Click to autofill demo credentials</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
+                  data-testid="demo-login-button"
+                >
+                  Use Demo
+                </button>
+              </div>
+            </div>
+
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
                 Username
