@@ -11,10 +11,10 @@
 
 ### 🤖 AI-Powered Content Creation
 - **Smart Caption Generation**: GPT-4o generates engaging, Pinterest-optimized captions
-- **AI Image Generation**: DALL-E (gpt-image-1) creates stunning visuals from text prompts 🆕
-- **Image Size Options**: Square (1024x1024), Landscape (1792x1024), Portrait (1024x1792) 🆕
-- **Quality Settings**: Standard or HD quality 🆕
-- **Style Control**: Natural or Vivid styles for different aesthetics 🆕
+- **AI Image Generation**: DALL-E (gpt-image-1) creates stunning visuals from text prompts
+- **Image Size Options**: Square (1024x1024), Landscape (1792x1024), Portrait (1024x1792)
+- **Quality Settings**: Standard or HD quality
+- **Style Control**: Natural or Vivid styles for different aesthetics
 - **Hashtag Suggestions**: AI-powered hashtag recommendations for maximum reach
 - **Tone Customization**: Choose from multiple tones (engaging, professional, casual, etc.)
 
@@ -46,30 +46,19 @@
 - MongoDB
 - Emergent LLM Key (provided)
 
-### Installation
+### 🏃 Application is Running!
 
-The application is already set up and running!
-
-**Backend**: http://localhost:8001
 **Frontend**: http://localhost:3000
+**Backend**: http://localhost:8001
 
-### Environment Variables
+### 🔑 Demo Login
+1. Go to http://localhost:3000
+2. Click the **"Use Demo"** button
+3. Start creating posts!
 
-#### Backend (.env)
-```bash
-MONGO_URL=mongodb://localhost:27017/pinspire
-JWT_SECRET=your-secret-key-change-in-production
-JWT_ALGORITHM=HS256
-EMERGENT_LLM_KEY=sk-emergent-c5277642b022eC64e7
-PINTEREST_APP_ID=        # Add your Pinterest App ID
-PINTEREST_APP_SECRET=    # Add your Pinterest App Secret
-PINTEREST_REDIRECT_URI=http://localhost:3000/pinterest/callback
-```
-
-#### Frontend (.env)
-```bash
-REACT_APP_BACKEND_URL=http://localhost:8001
-```
+**Demo Credentials:**
+- Username: `demo`
+- Password: `demo123`
 
 ---
 
@@ -77,25 +66,26 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 
 ### 1. Sign Up / Login
 - Navigate to http://localhost:3000
-- Create an account or login
+- Use the demo account or create your own
 - Your credentials are securely stored
 
 ### 2. Create a Post
 - Click "Create Post" in the navigation
-- Use AI to generate captions:
+- **Generate Caption with AI:**
   - Enter your topic/description
   - Choose a tone (engaging, professional, etc.)
   - Add keywords (optional)
   - Click "Generate Caption"
-- Use AI to generate images:
+- **Generate Image with AI:**
   - Describe the image you want
+  - Select size, quality, and style
   - Click "Generate Image"
   - Or paste an image URL
 
 ### 3. Schedule Your Post
 - Choose a date and time for posting
 - Or save as draft for later
-- Your post will be automatically published at the scheduled time
+- Your post will be stored securely
 
 ### 4. Manage Posts
 - View all your posts in the dashboard
@@ -110,7 +100,7 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 - [x] User authentication (signup/login)
 - [x] JWT-based security
 - [x] AI caption generation (GPT-4o)
-- [x] **AI image generation (DALL-E via gpt-image-1)** 🆕
+- [x] **AI image generation (DALL-E via gpt-image-1)**
 - [x] Post creation and management
 - [x] Post scheduling
 - [x] Dashboard with filtering
@@ -118,145 +108,137 @@ REACT_APP_BACKEND_URL=http://localhost:8001
 - [x] MongoDB integration
 - [x] Pinterest integration (Mock mode)
 - [x] Multi-board posting
+- [x] **Fixed: All text inputs working correctly**
 
-### 🚧 Pending Integration
+### 🚧 Ready for Enhancement
 - [ ] Pinterest OAuth flow (requires real Pinterest App credentials)
-- [ ] Pinterest board fetching (real API)
-- [ ] Actual posting to Pinterest (real API)
 - [ ] Automated scheduled post publishing (APScheduler)
+- [ ] Analytics dashboard
+- [ ] Template library
 
 ---
 
-## 📖 API Documentation
+## 📚 Documentation
 
-### Authentication
-```bash
-# Signup
-POST /api/auth/signup
-Body: {"username": "user", "email": "user@example.com", "password": "pass123"}
-
-# Login
-POST /api/auth/login
-Body: {"username": "user", "password": "pass123"}
-
-# Get current user
-GET /api/auth/me
-Headers: Authorization: Bearer <token>
-```
-
-### AI Generation
-```bash
-# Generate caption
-POST /api/ai/generate-caption
-Headers: Authorization: Bearer <token>
-Body: {"topic": "Healthy recipes", "tone": "engaging", "keywords": ["healthy", "food"]}
-
-# Generate image
-POST /api/ai/generate-image
-Headers: Authorization: Bearer <token>
-Body: {"prompt": "Beautiful sunset over mountains", "style": "professional"}
-
-# Suggest hashtags
-POST /api/ai/suggest-hashtags
-Headers: Authorization: Bearer <token>
-Body: {"topic": "Travel photography"}
-```
-
-### Posts
-```bash
-# Get all posts
-GET /api/posts
-Headers: Authorization: Bearer <token>
-
-# Create post
-POST /api/posts
-Headers: Authorization: Bearer <token>
-Body: {"caption": "...", "image_url": "...", "scheduled_time": "2025-01-01T10:00:00"}
-
-# Update post
-PUT /api/posts/{post_id}
-Headers: Authorization: Bearer <token>
-Body: {"caption": "Updated caption"}
-
-# Delete post
-DELETE /api/posts/{post_id}
-Headers: Authorization: Bearer <token>
-```
+- **README.md** (this file) - Overview and quick start
+- **ROADMAP.md** - Detailed development status and next steps
+- **LOGIN_CREDENTIALS.md** - Demo account and login instructions
+- **PINTEREST_API_SETUP.md** - Pinterest API setup guide
+- **TROUBLESHOOTING.md** - Common issues and solutions
 
 ---
 
-## 🔧 Development
+## 🔧 Service Management
 
-### Running Services
-
-**Backend:**
+### Check Status
 ```bash
-cd /app/backend
-python3 -m uvicorn server:app --host 0.0.0.0 --port 8001 --reload
-```
-
-**Frontend:**
-```bash
-cd /app/frontend
-yarn dev
-```
-
-**Using Supervisor (Recommended):**
-```bash
-sudo supervisorctl restart all
 sudo supervisorctl status
 ```
+
+### Restart Services
+```bash
+# Restart all
+sudo supervisorctl restart all
+
+# Restart individually
+sudo supervisorctl restart backend
+sudo supervisorctl restart frontend
+```
+
+### View Logs
+```bash
+# Backend logs
+tail -f /var/log/supervisor/backend.err.log
+
+# Frontend logs
+tail -f /var/log/supervisor/frontend.err.log
+```
+
+---
+
+## 💻 Development
 
 ### Project Structure
 ```
 /app/
 ├── backend/
-│   ├── server.py           # Main FastAPI application
-│   ├── requirements.txt    # Python dependencies
-│   └── .env               # Backend environment variables
+│   ├── server.py              # Main FastAPI application
+│   ├── pinterest_service.py   # Pinterest integration
+│   ├── requirements.txt       # Python dependencies
+│   └── .env                   # Backend environment variables
 ├── frontend/
 │   ├── src/
-│   │   ├── components/
-│   │   │   ├── Auth/      # Login & Signup
-│   │   │   ├── Dashboard/ # Post management
-│   │   │   ├── PostCreator/ # AI post creation
-│   │   │   └── Common/    # Shared components
-│   │   ├── services/
-│   │   │   └── api.js     # API client
-│   │   ├── App.js         # Main React component
-│   │   └── main.jsx       # Entry point
-│   ├── package.json       # Node dependencies
-│   └── .env              # Frontend environment variables
-├── ROADMAP.md             # Detailed development roadmap
-└── PINTEREST_API_SETUP.md # Pinterest API setup guide
+│   │   ├── components/        # React components
+│   │   ├── services/          # API client
+│   │   ├── App.js             # Main React component
+│   │   └── main.jsx           # Entry point
+│   ├── package.json           # Node dependencies
+│   ├── vite.config.js         # Vite configuration
+│   └── .env                   # Frontend environment variables
+└── *.md                       # Documentation
+```
+
+### Environment Variables
+
+**Backend (.env)**
+```bash
+MONGO_URL=mongodb://localhost:27017/pinspire
+JWT_SECRET=your-secret-key-change-in-production
+JWT_ALGORITHM=HS256
+EMERGENT_LLM_KEY=sk-emergent-c5277642b022eC64e7
+PINTEREST_APP_ID=MOCK_1234567890        # Mock mode
+PINTEREST_APP_SECRET=MOCK_secret        # Mock mode
+PINTEREST_REDIRECT_URI=http://localhost:3000/pinterest/callback
+```
+
+**Frontend (.env)**
+```bash
+REACT_APP_BACKEND_URL=http://localhost:8001
 ```
 
 ---
 
-## 🔌 Pinterest API Setup
+## 📡 API Endpoints
 
-To enable real Pinterest posting, follow these steps:
+### Authentication
+```bash
+POST /api/auth/signup - User registration
+POST /api/auth/login - User login
+GET /api/auth/me - Get current user
+```
 
-1. **Create Pinterest Developer Account**
-   - Go to https://developers.pinterest.com/
-   - Create a new app
-   - Get your App ID and App Secret
+### AI Generation
+```bash
+POST /api/ai/generate-caption - Generate caption using GPT-4o
+POST /api/ai/generate-image - Generate image using DALL-E 3
+POST /api/ai/suggest-hashtags - Get hashtag suggestions
+```
 
-2. **Configure OAuth**
-   - Set redirect URI: `http://localhost:3000/pinterest/callback`
-   - Add required scopes: `boards:read`, `boards:write`, `pins:read`, `pins:write`
+### Posts
+```bash
+GET /api/posts - Get all user posts
+POST /api/posts - Create new post
+GET /api/posts/{id} - Get post by ID
+PUT /api/posts/{id} - Update post
+DELETE /api/posts/{id} - Delete post
+```
 
-3. **Update Environment Variables**
-   - Add `PINTEREST_APP_ID` to backend/.env
-   - Add `PINTEREST_APP_SECRET` to backend/.env
+### Pinterest
+```bash
+GET /api/pinterest/mode - Check mock/real mode
+GET /api/pinterest/connect - Initiate OAuth
+POST /api/pinterest/callback - OAuth callback
+GET /api/pinterest/boards - Get user boards
+POST /api/pinterest/post/{id} - Post to Pinterest
+```
 
-📖 See [PINTEREST_API_SETUP.md](./PINTEREST_API_SETUP.md) for detailed instructions.
+**API Documentation**: http://localhost:8001/docs (FastAPI auto-generated)
 
 ---
 
 ## 🧪 Testing
 
-### Test Backend API
+### Test Backend
 ```bash
 # Health check
 curl http://localhost:8001/
@@ -266,7 +248,7 @@ curl -X POST http://localhost:8001/api/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"username":"test","email":"test@example.com","password":"test123"}'
 
-# Generate AI caption
+# Generate AI caption (replace <token>)
 curl -X POST http://localhost:8001/api/ai/generate-caption \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
@@ -275,7 +257,7 @@ curl -X POST http://localhost:8001/api/ai/generate-caption \
 
 ### Test Frontend
 - Open http://localhost:3000 in your browser
-- Sign up / Login
+- Login with demo account
 - Create a post with AI assistance
 - View posts in dashboard
 
@@ -293,19 +275,22 @@ curl -X POST http://localhost:8001/api/ai/generate-caption \
 
 ## 🔮 Future Enhancements
 
-### Phase 2 Features
+### Phase 6: Automated Scheduling
+- APScheduler integration
+- Background job system
+- Automated publishing at scheduled times
+
+### Phase 7: Analytics & Polish
 - Analytics dashboard
 - Post performance tracking
 - Template library
 - Batch operations
-- Image editing tools
 
-### Phase 3 Features
+### Beyond
 - Multi-platform support (Instagram, Facebook)
 - Team collaboration
-- Advanced scheduling (optimal time suggestions)
+- Advanced AI features
 - Content calendar view
-- Brand kit management
 
 ---
 
@@ -314,12 +299,12 @@ curl -X POST http://localhost:8001/api/ai/generate-caption \
 ### AI Generation
 - Uses Emergent LLM Key for OpenAI access
 - GPT-4o for caption generation
-- DALL-E 3 integration ready (placeholder active)
+- DALL-E 3 for image generation
 - Supports multiple tones and styles
 
 ### Database
 - MongoDB for flexible document storage
-- Collections: users, posts, templates
+- Collections: users, posts
 - UUID-based IDs for consistency
 
 ### Security
@@ -330,10 +315,39 @@ curl -X POST http://localhost:8001/api/ai/generate-caption \
 
 ---
 
+## 🆘 Recent Updates
+
+**January 27, 2025:**
+- ✅ Fixed text input issue in Create Post page
+- ✅ Added Vite proxy configuration for /api routes
+- ✅ All text inputs now working correctly
+- ✅ Cleaned up documentation
+- ✅ Updated ROADMAP with current status
+
+---
+
+## 🔱 Troubleshooting
+
+For common issues and solutions, see **TROUBLESHOOTING.md**
+
+Quick fixes:
+```bash
+# Check service status
+sudo supervisorctl status
+
+# Restart all services
+sudo supervisorctl restart all
+
+# View backend logs
+tail -f /var/log/supervisor/backend.err.log
+```
+
+---
+
 ## 🤝 Contributing
 
-This is an MVP application. Future improvements include:
-- Pinterest API integration
+This is an MVP application. Planned improvements include:
+- Pinterest API integration (real credentials)
 - Advanced scheduling features
 - Analytics and insights
 - Template library
@@ -341,20 +355,9 @@ This is an MVP application. Future improvements include:
 
 ---
 
-## 📄 License
+## 📝 License
 
 This project is part of the Pinspire MVP.
-
----
-
-## 🆘 Support
-
-For issues or questions:
-1. Check the [ROADMAP.md](./ROADMAP.md) for planned features
-2. Review [PINTEREST_API_SETUP.md](./PINTEREST_API_SETUP.md) for API setup
-3. Check logs:
-   - Backend: `/var/log/supervisor/backend.*.log`
-   - Frontend: `/var/log/supervisor/frontend.*.log`
 
 ---
 
