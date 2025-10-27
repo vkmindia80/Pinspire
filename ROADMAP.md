@@ -267,10 +267,15 @@ frontend/
 {
   _id: UUID,
   user_id: UUID,
-  caption: String,
+  title: String,                    // NEW: Pin title (max 50 chars)
+  caption: String,                  // Short hook (max 150 chars)
+  description: String,              // NEW: Detailed description (max 500 chars)
+  link_url: String,                 // NEW: Destination URL for pin
   image_url: String,
   image_data: String,
   boards: [String],
+  suggested_boards: [String],       // NEW: AI-suggested board names
+  tagged_topics: [String],          // NEW: AI-suggested topic tags
   scheduled_time: DateTime,
   status: 'draft' | 'scheduled' | 'published',
   ai_generated_caption: Boolean,
