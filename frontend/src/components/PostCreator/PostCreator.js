@@ -92,7 +92,17 @@ function PostCreator() {
   }, []);
 
   const handleTopicChange = useCallback((e) => {
-    setAiSettings(prev => ({ ...prev, topic: e.target.value }));
+    const topic = e.target.value;
+    setAiSettings(prev => ({ ...prev, topic }));
+    
+    // Auto-generate image prompt based on topic
+    if (topic.trim()) {
+      // Create a concise image prompt from the topic
+      const imagePromptText = `A high-quality, visually appealing image for Pinterest about: ${topic}. Professional photography style, vibrant colors, engaging composition.`;
+      setImagePrompt(imagePromptText);
+    } else {
+      setImagePrompt('');
+    }
   }, []);
 
   const handleToneChange = useCallback((e) => {
