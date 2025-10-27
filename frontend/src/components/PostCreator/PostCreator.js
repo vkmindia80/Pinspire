@@ -378,15 +378,23 @@ function PostCreator() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Keywords (comma-separated)
+                  {aiSettings.topic && aiSettings.keywords && (
+                    <span className="ml-2 text-xs text-green-600 font-normal">
+                      ✨ Auto-generated from topic
+                    </span>
+                  )}
                 </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pinterest-red"
-                  placeholder="E.g., recipe, healthy, breakfast"
+                  placeholder="E.g., recipe, healthy, breakfast (will auto-fill when you enter a topic)"
                   value={aiSettings.keywords}
                   onChange={handleKeywordsChange}
                   data-testid="caption-keywords-input"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  💡 Tip: Keywords auto-generate from your topic. Edit them to refine your caption!
+                </p>
               </div>
 
               <button
