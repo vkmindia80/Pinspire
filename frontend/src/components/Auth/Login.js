@@ -97,10 +97,11 @@ function Login({ onLogin }) {
                 <button
                   type="button"
                   onClick={handleDemoLogin}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
+                  disabled={loading}
+                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="demo-login-button"
                 >
-                  <span>Use Demo</span>
+                  <span>{loading ? 'Logging in...' : 'Use Demo'}</span>
                 </button>
               </div>
             </div>
