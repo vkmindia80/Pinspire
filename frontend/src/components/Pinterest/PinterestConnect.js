@@ -41,7 +41,7 @@ function PinterestConnect({ onConnectionChange }) {
     setError('');
 
     try {
-      const response = await api.get('/api/pinterest/connect');
+      const response = await api.get('/pinterest/connect');
       
       if (response.data.is_mock) {
         // In mock mode, simulate OAuth flow
