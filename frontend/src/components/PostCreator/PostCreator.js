@@ -447,21 +447,24 @@ function PostCreator() {
               <button
                 onClick={handleGenerateCaption}
                 disabled={generatingCaption || !aiSettings.topic.trim()}
-                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition disabled:opacity-50"
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition disabled:opacity-50 shadow-md"
                 data-testid="generate-caption-button"
               >
                 {generatingCaption ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Generating...</span>
+                    <span>Generating All Content...</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="h-5 w-5" />
-                    <span>Generate Caption</span>
+                    <span>Generate All with AI ✨</span>
                   </>
                 )}
               </button>
+              <p className="text-xs text-center text-gray-600 mt-2">
+                🎯 Generates: Title, Caption, Description, Board Suggestions & Topics
+              </p>
             </div>
           </div>
 
