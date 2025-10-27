@@ -75,6 +75,9 @@ class PostUpdate(BaseModel):
     boards: Optional[List[str]] = None
     scheduled_time: Optional[str] = None
 
+class PinterestPostRequest(BaseModel):
+    board_ids: List[str]
+
 # Helper Functions
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
