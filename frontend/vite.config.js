@@ -7,6 +7,11 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 3000,
     strictPort: true,
+    allowedHosts: [
+      'codebase-cleaner.preview.emergentagent.com',
+      '.preview.emergentagent.com',
+      'localhost'
+    ],
     hmr: {
       clientPort: 443,
       overlay: true
