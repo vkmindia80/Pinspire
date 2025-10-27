@@ -15,6 +15,13 @@ export default defineConfig({
     hmr: {
       clientPort: 443,
       host: 'pinpost-scheduler.preview.emergentagent.com'
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8001',
+        changeOrigin: true,
+        secure: false
+      }
     }
   },
   esbuild: {
